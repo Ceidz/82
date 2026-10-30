@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Franchise Admin</title>
+<style>
+:root{--bg:#0b0d12;--card:#141821;--line:#232a38;--tx:#e8ecf4;--dim:#8b95a8;--p:#7c5cff;--g:#34d399;--r:#f87171}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,Segoe UI,sans-serif}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5;flex-wrap:wrap;gap:8px}
+header span{color:var(--p)}.r{display:flex;gap:10px;align-items:center}
+nav{display:flex;gap:6px;padding:12px 20px 0;flex-wrap:wrap}nav button.on{background:var(--p);border-color:var(--p)}
+main{padding:16px 20px 60px;max-width:1200px;margin:0 auto}
+button{background:var(--card);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit}button:hover{border-color:var(--p)}
+button.p{background:var(--p);border-color:var(--p)}button.red{color:var(--r)}
+input,select,textarea{background:#0f131b;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;min-width:0}textarea{width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}.card h3{margin:0 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}
+.k{color:var(--dim);font-size:12px;letter-spacing:.06em}.v{font-size:26px;font-weight:700;margin-top:4px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}.dim{color:var(--dim)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;background:var(--card)}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--dim);font-size:12px;letter-spacing:.06em}
+.acts{display:flex;gap:6px}.acts button{padding:4px 9px;font-size:12px}
+.tag{padding:2px 8px;border-radius:99px;border:1px solid var(--line);font-size:11px}.tag.red{color:var(--r);border-color:var(--r)}.tag.g{color:var(--g);border-color:var(--g)}
+.login{max-width:380px;margin:12vh auto;display:grid;gap:12px}.login input{width:100%}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--g);color:#04120c;padding:10px 16px;border-radius:10px;z-index:99;font-weight:600}.toast.bad{background:var(--r);color:#2a0606}
+</style></head><body><div id="app"></div>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider,signOut}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import{getFirestore,doc,collection,query,orderBy,limit,onSnapshot,getDoc,setDoc,updateDoc,deleteDoc,addDoc,runTransaction,writeBatch,increment}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyDfRiV8Gl2uslFZtBFc0i2Xw2DyIosZEP0",authDomain:"project-5592087542610272509.firebaseapp.com",projectId:"project-5592087542610272509",storageBucket:"project-5592087542610272509.firebasestorage.app",messagingSenderId:"681903533252",appId:"1:681903533252:web:40fea163cf2c8aec75ed91",measurementId:"G-J07W6F6Y02"};
+const auth=getAuth(initializeApp(firebaseConfig)),db=getFirestore(auth.app);
+const app=document.getElementById('app'),$=id=>document.getElementById(id),V=id=>$(id)?$(id).value:'';
+const e=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const toast=(m,bad)=>{const t=document.createElement('div');t.className='toast'+(bad?' bad':'');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)};
+const run=f=>Promise.resolve().then(f).catch(x=>toast(x.message||String(x),1));
+const tbl=(h,rows)=>`<div class="tw"><table><thead><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${rows||`<tr><td colspan="${h.length}" class="dim">Nothing here yet.</td></tr>`}</tbody></table></div>`;
+const when=t=>t?new Date(t).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}):'';
+const uref=id=>doc(db,'users',id);
+let me=null,subs=[],tab='dash',users=[],bets=[],gifts=[],admins=[],logs=[],cfgA={},cfgG={};
+const nm=id=>(users.find(u=>u.id===id)||{}).name||id.slice(0,6)+'…';
+const log=t=>addDoc(collection(db,'adminlog'),{by:me.email||me.uid,at:Date.now(),text:t}).catch(()=>{});
+const TABS=[['dash','Dashboard'],['players','Players'],['bets','Bets'],['gifts','Gifts'],['tools','Tools'],['log','Activity log']];
+
+onAuthStateChanged(auth,async u=>{
+ subs.forEach(f=>f());subs=[];me=u;
+ if(!u)return app.innerHTML=`<div class="login card"><h2 style="margin:0">Franchise <span style="color:var(--p)">Admin</span></h2>
+ <input id="em" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')A.login()">
+ <button class="p" onclick="A.login()">Log in</button><button onclick="A.google()">Continue with Google</button></div>`;
+ let ok=false;try{ok=(await getDoc(doc(db,'admins',u.uid))).exists()}catch(x){}
+ if(!ok)return app.innerHTML=`<div class="login card"><h3 style="margin:0">This account is not an admin</h3><p class="dim">Signed in as ${e(u.email||'guest')}.<br>If this should be an admin, add a document to the <b>admins</b> collection in Firestore with this ID (and make sure the latest rules are published):</p><input readonly value="${u.uid}" onclick="this.select()"><button onclick="A.out()">Sign out</button></div>`;
+ start();
+});
+
+function start(){
+ app.innerHTML=`<header><b>FRANCHISE <span>ADMIN</span></b><div class="r"><span class="dim">${e(me.email||me.uid)}</span><button onclick="A.out()">Sign out</button></div></header>
+ <nav>${TABS.map(([k,l])=>`<button id="n_${k}" onclick="A.go('${k}')">${l}</button>`).join('')}</nav><main id="main"></main>`;
+ const L=(q,set)=>subs.push(onSnapshot(q,s=>{set(s);fill()},x=>toast(x.message,1)));
+ L(query(collection(db,'users'),limit(500)),s=>users=s.docs.map(d=>({id:d.id,...d.data()})));
+ L(query(collection(db,'bets'),orderBy('created','desc'),limit(200)),s=>bets=s.docs.map(d=>({id:d.id,...d.data()})));
+ L(query(collection(db,'gifts'),limit(200)),s=>gifts=s.docs.map(d=>({id:d.id,...d.data()})));
+ L(collection(db,'admins'),s=>admins=s.docs.map(d=>({id:d.id,...d.data()})));
+ L(query(collection(db,'adminlog'),orderBy('at','desc'),limit(60)),s=>logs=s.docs.map(d=>d.data()));
+ L(doc(db,'config','announce'),s=>cfgA=s.exists()?s.data():{});
+ L(doc(db,'config','game'),s=>cfgG=s.exists()?s.data():{});
+ go(tab);
+}
+
+const PAGES={
+dash:()=>'<div id="dCards" class="grid"></div>',
+players:()=>`<div class="bar"><input id="pq" placeholder="Search player" oninput="A.fill()"><select id="ps" onchange="A.fill()"><option value="c">Most coins</option><option value="l">Fewest coins</option><option value="n">Name A-Z</option><option value="b">Banned first</option></select>
+ <input id="pa" type="number" min="0" value="100" style="width:110px"><span class="dim">amount for Give / Take / Set</span><button onclick="A.csv()">Export CSV</button></div><div id="pList"></div>`,
+bets:()=>`<div class="bar"><input id="bq" placeholder="Player name" oninput="A.fill()"><select id="bs" onchange="A.fill()"><option value="">All statuses</option><option>open</option><option>won</option><option>lost</option><option>push</option><option>void</option></select><span class="dim" id="bSum"></span></div><div id="bList"></div>`,
+gifts:()=>'<div id="gList"></div>',
+log:()=>'<div id="lList"></div>',
+tools:()=>`<div class="grid2">
+ <div class="card"><h3>Announcement banner</h3><p class="dim">Shown to every player at the top of the Online tab.</p><textarea id="tA" rows="3" maxlength="200"></textarea><div class="bar"><button class="p" onclick="A.ann(true)">Publish</button><button onclick="A.ann(false)">Hide</button><span class="dim" id="tAs"></span></div></div>
+ <div class="card"><h3>Betting switch</h3><p id="tGs" class="dim"></p><div class="bar"><button class="red" onclick="A.betSw(false)">Pause betting</button><button class="p" onclick="A.betSw(true)">Resume betting</button></div></div>
+ <div class="card"><h3>Bulk coins</h3><div class="bar"><input id="ta" type="number" min="1" value="100" style="width:110px"><button class="p" onclick="A.bulk('give')">Give everyone</button><button onclick="A.bulk('take')">Take from everyone</button></div>
+ <div class="bar"><span class="dim">Players under</span><input id="tx" type="number" value="10" style="width:80px"><span class="dim">get set to</span><input id="ty" type="number" value="250" style="width:90px"><button onclick="A.bail()">Bail out</button></div>
+ <div class="bar"><button class="red" onclick="A.resetAll()">Reset everyone to 500 coins</button></div></div>
+ <div class="card"><h3>Admins</h3><div id="aList"></div><div class="bar"><input id="tUid" placeholder="User UID to promote" style="flex:1"><button class="p" onclick="A.addAdmin()">Add admin</button></div></div></div>`};
+
+function go(t){tab=t;TABS.forEach(([k])=>$('n_'+k).classList.toggle('on',k===t));$('main').innerHTML=PAGES[t]();if(t==='tools')$('tA').value=cfgA.text||'';fill()}
+function fill(){if(!$('main')||!me)return;({dash:fDash,players:fPlayers,bets:fBets,gifts:fGifts,tools:fTools,log:fLog})[tab]()}
+const card=(k,v,s)=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div><div class="dim">${s||''}</div></div>`;
+const st=s=>`<span class="tag ${s==='won'||s==='claimed'?'g':s==='lost'||s==='cancelled'?'red':''}">${s}</span>`;
+
+function fDash(){
+ const ob=bets.filter(b=>b.status==='open'),sb=bets.filter(b=>b.status!=='open'),pg=gifts.filter(g=>!g.claimed),rich=[...users].sort((a,b)=>b.coins-a.coins)[0];
+ const profit=sb.reduce((a,b)=>a+(b.status==='lost'?b.stake:b.status==='won'?-(Math.round(b.stake*b.odds)-b.stake):0),0);
+ $('dCards').innerHTML=card('PLAYERS',users.length,users.filter(u=>u.banned).length+' banned · '+users.filter(u=>u.coins<10).length+' broke')+card('COINS IN CIRCULATION',users.reduce((a,u)=>a+u.coins,0))
+ +card('OPEN BETS',ob.length,'stake '+ob.reduce((a,b)=>a+b.stake,0))+card('HOUSE PROFIT',(profit>0?'+':'')+profit,'from the last '+bets.length+' bets')
+ +card('PENDING GIFTS',pg.length,pg.reduce((a,g)=>a+g.amount,0)+' coins unclaimed')+card('RICHEST PLAYER',rich?e(rich.name):'-',rich?rich.coins+' coins':'')
+ +card('BETTING',cfgG.betting===false?'PAUSED':'LIVE')+card('BANNER',cfgA.on&&cfgA.text?'ON':'OFF');
+}
+function fPlayers(){
+ const q=V('pq').toLowerCase(),m=V('ps'),f=users.filter(u=>(u.name||'').toLowerCase().includes(q));
+ f.sort(m==='l'?(a,b)=>a.coins-b.coins:m==='n'?(a,b)=>(a.name||'').localeCompare(b.name||''):m==='b'?(a,b)=>(!!b.banned-!!a.banned)||b.coins-a.coins:(a,b)=>b.coins-a.coins);
+ $('pList').innerHTML=tbl(['Player','Coins','Status','Actions'],f.map(u=>`<tr><td>${e(u.name)}</td><td>${u.coins}</td><td>${u.banned?'<span class="tag red">BANNED</span>':'<span class="tag g">OK</span>'}</td><td class="acts">
+ <button onclick="A.coin('${u.id}','give')">Give</button><button onclick="A.coin('${u.id}','take')">Take</button><button onclick="A.coin('${u.id}','set')">Set</button>
+ <button onclick="A.ban('${u.id}',${!u.banned})">${u.banned?'Unban':'Ban'}</button><button onclick="A.cd('${u.id}')">Reset daily</button><button onclick="A.pb('${u.id}')">Bets</button><button class="red" onclick="A.del('${u.id}')">Delete</button></td></tr>`).join(''));
+}
+function fBets(){
+ const q=V('bq').toLowerCase(),s=V('bs'),f=bets.filter(b=>(!q||(b.name||'').toLowerCase().includes(q))&&(!s||b.status===s));
+ $('bSum').textContent=f.length+' bets · stake '+f.reduce((a,b)=>a+b.stake,0);
+ $('bList').innerHTML=tbl(['Time','Player','Bet','Stake','Odds','Status',''],f.map(b=>`<tr><td>${when(b.created)}</td><td>${e(b.name)}</td><td>${e(b.label)}</td><td>${b.stake}</td><td>${b.odds}x</td><td>${st(b.status)}</td><td class="acts">${b.status==='open'?`<button class="red" onclick="A.voidBet('${b.id}')">Void &amp; refund</button>`:''}</td></tr>`).join(''));
+}
+function fGifts(){
+ $('gList').innerHTML=tbl(['From','To','Amount','Status',''],gifts.map(g=>{const s=g.cancelled?'cancelled':g.claimed?'claimed':'pending';return`<tr><td>${e(g.fromName||nm(g.from))}</td><td>${e(nm(g.to))}</td><td>${g.amount}</td><td>${st(s)}</td><td class="acts">${s==='pending'?`<button class="red" onclick="A.cancelGift('${g.id}')">Cancel &amp; refund</button>`:''}</td></tr>`}).join(''));
+}
+function fLog(){$('lList').innerHTML=tbl(['Time','Admin','Action'],logs.map(l=>`<tr><td>${when(l.at)}</td><td>${e(l.by)}</td><td>${e(l.text)}</td></tr>`).join(''))}
+function fTools(){
+ $('tAs').textContent=cfgA.on&&cfgA.text?'Banner is ON':'Banner is hidden';
+ $('tGs').innerHTML='Betting is currently <b>'+(cfgG.betting===false?'PAUSED':'LIVE')+'</b>. While paused, players cannot place new bets.';
+ $('aList').innerHTML=tbl(['Admin','UID',''],admins.map(a=>`<tr><td>${e(nm(a.id))}</td><td class="dim">${a.id.slice(0,10)}…</td><td class="acts">${a.id===me.uid?'<span class="dim">you</span>':`<button class="red" onclick="A.rmAdmin('${a.id}')">Remove</button>`}</td></tr>`).join(''));
+}
+
+const num=id=>{const n=Math.floor(+V(id));if(!(n>=0))throw Error('Enter a valid amount');return n};
+window.A={
+ fill,go,
+ login:()=>run(()=>signInWithEmailAndPassword(auth,V('em').trim(),V('pw'))),
+ google:()=>run(()=>signInWithPopup(auth,new GoogleAuthProvider())),
+ out:()=>signOut(auth),
+ coin:(id,op)=>run(async()=>{const n=num('pa');
+  await runTransaction(db,async t=>{const r=uref(id),c=(await t.get(r)).data().coins;t.update(r,{coins:op==='give'?c+n:op==='take'?Math.max(0,c-n):n})});
+  log(op+' '+n+' coins: '+nm(id));toast('Coins updated')}),
+ ban:(id,v)=>run(async()=>{await updateDoc(uref(id),{banned:v});log((v?'banned ':'unbanned ')+nm(id));toast(v?'Player banned':'Player unbanned')}),
+ cd:id=>run(async()=>{await updateDoc(uref(id),{lastDaily:0,lastRelief:0});log('reset daily/relief timers: '+nm(id));toast('Timers reset')}),
+ pb:id=>{go('bets');$('bq').value=nm(id);fill()},
+ del:id=>run(async()=>{const u=users.find(x=>x.id===id);if(!confirm('Delete player '+u.name+'? Their name is freed and their coins are lost.'))return;
+  const b=writeBatch(db);b.delete(uref(id));b.delete(doc(db,'names',u.name.toLowerCase()));await b.commit();log('deleted player '+u.name);toast('Player deleted')}),
+ csv:()=>{const rows=[['name','coins','banned'],...users.map(u=>[u.name,u.coins,!!u.banned])].map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows],{type:'text/csv'}));a.download='players.csv';a.click()},
+ voidBet:id=>run(async()=>{if(!confirm('Void this bet and refund the stake?'))return;let nmx='';
+  await runTransaction(db,async t=>{const br=doc(db,'bets',id),b=(await t.get(br)).data();if(!b||b.status!=='open')throw Error('Bet is no longer open');
+   const us=await t.get(uref(b.uid));t.update(br,{status:'void'});if(us.exists())t.update(uref(b.uid),{coins:us.data().coins+b.stake});nmx=b.name+' / '+b.label});
+  log('voided bet '+nmx);toast('Bet voided and refunded')}),
+ cancelGift:id=>run(async()=>{if(!confirm('Cancel this gift and refund the sender?'))return;let d='';
+  await runTransaction(db,async t=>{const gr=doc(db,'gifts',id),g=(await t.get(gr)).data();if(!g||g.claimed)throw Error('Gift was already claimed');
+   const us=await t.get(uref(g.from));t.update(gr,{claimed:true,cancelled:true});if(us.exists())t.update(uref(g.from),{coins:us.data().coins+g.amount});d=g.amount+' coins from '+(g.fromName||'')});
+  log('cancelled gift '+d);toast('Gift cancelled and refunded')}),
+ ann:on=>run(async()=>{const text=V('tA').trim();if(on&&!text)throw Error('Write a message first');
+  await setDoc(doc(db,'config','announce'),{text,on,updated:Date.now()});log(on?'published banner: '+text:'hid banner');toast(on?'Banner published':'Banner hidden')}),
+ betSw:on=>run(async()=>{await setDoc(doc(db,'config','game'),{betting:on},{merge:true});log(on?'resumed betting':'paused betting');toast(on?'Betting resumed':'Betting paused')}),
+ bulk:op=>run(async()=>{const n=num('ta');if(!n)throw Error('Enter an amount');if(!confirm((op==='give'?'Give ':'Take ')+n+' coins '+(op==='give'?'to':'from')+' all '+users.length+' players?'))return;
+  const b=writeBatch(db);users.forEach(u=>b.update(uref(u.id),{coins:op==='give'?increment(n):Math.max(0,u.coins-n)}));await b.commit();log(op+' '+n+' coins to everyone');toast('Done')}),
+ bail:()=>run(async()=>{const x=num('tx'),y=num('ty'),f=users.filter(u=>u.coins<x);if(!f.length)throw Error('No players under '+x);
+  if(!confirm('Set '+f.length+' players to '+y+' coins?'))return;const b=writeBatch(db);f.forEach(u=>b.update(uref(u.id),{coins:y}));await b.commit();log('bailout: '+f.length+' players set to '+y);toast('Bailed out '+f.length+' players')}),
+ resetAll:()=>run(async()=>{if(!confirm('Reset ALL '+users.length+' players to 500 coins?'))return;const b=writeBatch(db);users.forEach(u=>b.update(uref(u.id),{coins:500}));await b.commit();log('reset everyone to 500');toast('Everyone reset')}),
+ addAdmin:()=>run(async()=>{const id=V('tUid').trim();if(id.length<20)throw Error('Paste a valid user UID');await setDoc(doc(db,'admins',id),{role:'admin',added:Date.now(),by:me.email||me.uid});log('added admin '+id);$('tUid').value='';toast('Admin added')}),
+ rmAdmin:id=>run(async()=>{if(!confirm('Remove this admin?'))return;await deleteDoc(doc(db,'admins',id));log('removed admin '+id);toast('Admin removed')})
+};
+</script></body></html>
