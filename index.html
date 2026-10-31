@@ -1,0 +1,2107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FRANCHISE | Basketball Manager</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap');
+:root{--bg:#090910;--panel:#12121e;--panel2:#191927;--border:#29293b;--purple:#a78bfa;--green:#42e6a0;--muted:#85859d;--white:#f5f3ff;--red:#ff667c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Inter,sans-serif;font-size:13px}
+button,input,select{font:inherit}
+button{cursor:pointer}
+header{height:65px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;background:#090910ed;z-index:10;backdrop-filter:blur(15px)}
+.logo{font:900 28px 'Barlow Condensed';letter-spacing:2px}
+.logo span{color:var(--purple)}
+.header-right{display:flex;gap:15px;align-items:center;color:var(--muted);font-size:11px}
+.status{color:var(--green);font-weight:800}
+.app{display:grid;grid-template-columns:210px minmax(0,1fr);max-width:1500px;margin:auto;min-height:calc(100vh - 65px)}
+aside{border-right:1px solid var(--border);padding:25px 13px}
+.nav-label{font-size:9px;color:var(--muted);letter-spacing:2px;font-weight:800;padding:10px}
+.nav{width:100%;display:flex;gap:12px;align-items:center;padding:13px 12px;border:0;border-radius:8px;background:transparent;color:#9999ae;text-align:left;margin:3px 0;font-size:12px;font-weight:700}
+.nav:hover,.nav.active{background:color-mix(in srgb,var(--purple) 12%,transparent);color:var(--purple)}
+.nav .ico{font-size:17px;width:20px;text-align:center}
+.sidebar-team{margin-top:35px;background:var(--panel);border:1px solid var(--border);padding:15px;border-radius:10px}
+.sidebar-team small{color:var(--muted);font-size:9px;letter-spacing:1px}
+.sidebar-team strong{display:block;font:800 22px 'Barlow Condensed';margin:8px 0}
+.sidebar-team p{color:var(--muted);font-size:10px;margin:0}
+main{padding:30px;min-width:0}
+.page{display:none}.page.active{display:block}
+.topline{color:var(--muted);font-size:10px;letter-spacing:2px;font-weight:800;text-transform:uppercase}
+h1{font:900 clamp(35px,5vw,53px) 'Barlow Condensed';margin:7px 0;text-transform:uppercase}
+h1 span{color:var(--purple)}
+h2{font:800 25px 'Barlow Condensed';text-transform:uppercase;margin:0}
+h3{font-size:13px;margin:0 0 14px}
+.sub{color:var(--muted);font-size:11px;line-height:1.7}
+.section{margin-top:25px}
+.section-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:10px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:19px}
+.grid{display:grid;gap:13px}
+.stats-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.metric small{font-size:9px;color:var(--muted);letter-spacing:1px;font-weight:800}
+.metric strong{font:800 35px 'Barlow Condensed';display:block;margin:6px 0}
+.metric p{font-size:10px;color:var(--muted);margin:0}
+.purple{color:var(--purple)}.green{color:var(--green)}.red{color:var(--red)}
+.hero{background:linear-gradient(115deg,#21183c,#151425 60%,#192a2a);border:1px solid #39304e;border-radius:13px;padding:25px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:20px}
+.hero .team-title{font:900 38px 'Barlow Condensed';margin:7px 0}
+.hero .record{font:800 54px 'Barlow Condensed';color:var(--green)}
+.btn{border:1px solid var(--border);background:var(--panel2);color:var(--white);padding:10px 15px;border-radius:7px;font-weight:700;font-size:11px}
+.btn:hover{border-color:var(--purple);color:var(--purple)}
+.btn.primary{background:var(--purple);border-color:var(--purple);color:#100d1a}
+.btn.success{background:var(--green);border-color:var(--green);color:#06160f}
+.btn.danger{color:var(--red)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+label{display:block;color:var(--muted);font-size:10px;font-weight:700;margin-bottom:7px}
+input,select{background:#0c0c16;color:var(--white);border:1px solid var(--border);border-radius:6px;padding:10px;width:100%;outline:none}
+input:focus,select:focus{border-color:var(--purple)}
+.field{min-width:0}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:9px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:720px;text-align:left;font-size:11px}
+th{background:var(--panel2);color:var(--muted);font-size:9px;letter-spacing:1px;padding:13px 12px}
+td{padding:12px;border-top:1px solid var(--border)}
+td input,td select{padding:7px;font-size:11px;min-width:65px}
+.player-name{font-weight:800;min-width:110px}
+.player-pos{color:var(--muted);font-size:9px;margin-top:4px}
+.rating{font:800 18px 'Barlow Condensed';color:var(--green)}
+.pill{font-size:9px;padding:5px 8px;border-radius:20px;background:#a78bfa18;color:var(--purple);font-weight:800}
+.progress{height:5px;background:#272738;border-radius:5px;overflow:hidden;margin-top:8px}
+.progress i{display:block;height:100%;background:var(--purple)}
+.score-card{background:linear-gradient(120deg,#1c1731,#111421);border:1px solid #3a3155;border-radius:12px;padding:25px;text-align:center}
+.scoreline{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+.bigscore{font:900 clamp(60px,10vw,100px) 'Barlow Condensed';line-height:1.1}
+.team-label{font:800 15px 'Barlow Condensed';margin-bottom:7px}
+.score-vs{color:var(--muted);font:800 18px 'Barlow Condensed'}
+.quarters{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border-top:1px solid var(--border);padding-top:15px;margin-top:20px}
+.quarters div{color:var(--muted);font-size:10px}
+.quarters strong{display:block;color:var(--white);font-size:18px;margin-top:5px}
+.game-controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px}
+.log{max-height:300px;overflow:auto}
+.log-entry{padding:12px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;font-size:11px;line-height:1.6}
+.log-entry:last-child{border:0}
+.log-time{color:var(--purple);font-weight:800;min-width:65px}
+.empty{text-align:center;color:var(--muted);padding:35px}
+.schedule-row{display:grid;grid-template-columns:65px 1fr 65px;gap:10px;align-items:center;padding:12px;border-bottom:1px solid var(--border);font-size:11px}
+.schedule-row:last-child{border:0}
+.schedule-result{text-align:right;font-weight:800}
+.winner-text{color:var(--green)}.loss-text{color:var(--red)}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--panel2);border:1px solid var(--purple);padding:13px 18px;border-radius:8px;z-index:50;display:none;font-size:11px}
+small.muted{color:var(--muted)}
+@media(max-width:850px){
+.app{grid-template-columns:1fr}
+aside{border-right:0;border-bottom:1px solid var(--border);padding:8px;display:flex;overflow-x:auto;gap:4px;position:sticky;top:65px;background:var(--bg);z-index:9}
+.nav-label,.sidebar-team{display:none}
+.nav{width:auto;white-space:nowrap;padding:11px;font-size:10px}
+main{padding:20px 13px}
+.stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:500px){
+.hero{grid-template-columns:1fr}.hero .record{font-size:42px}
+.form-grid{grid-template-columns:1fr}
+.scoreline{gap:5px}
+}
+.btn.sm{padding:6px 9px;font-size:10px}.nav:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--purple);outline-offset:2px}.hl{background:color-mix(in srgb,var(--purple) 10%,transparent)}.clickrow{cursor:pointer}.clickrow:hover{background:var(--panel2)}.banner{margin-top:15px;padding:14px;border:1px solid var(--green);border-radius:9px;color:var(--green);font-weight:700}body{padding-bottom:env(safe-area-inset-bottom,0px)}
+
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px}
+.pcard{background:var(--panel);border:1px solid var(--border);border-radius:11px;padding:15px;display:flex;flex-direction:column;gap:11px;transition:border-color .15s,transform .15s}
+.pcard:hover{border-color:#4a4a66;transform:translateY(-1px)}
+.pcard.st{border-color:color-mix(in srgb,var(--purple) 60%,var(--border));background:linear-gradient(160deg,#1a1630,var(--panel) 55%)}
+.pcard.out{opacity:.72}
+.pc-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.pc-name{font:800 18px 'Barlow Condensed';text-transform:uppercase;letter-spacing:.4px;line-height:1.1}
+.pc-meta{color:var(--muted);font-size:10px;margin-top:4px}
+.pc-ovr{font:900 36px 'Barlow Condensed';line-height:1}
+.pc-line{color:var(--muted);font-size:10px;display:flex;justify-content:space-between;gap:8px;border-top:1px solid var(--border);padding-top:9px}
+.abar{display:grid;grid-template-columns:34px 1fr 24px;align-items:center;gap:8px;font-size:10px;color:var(--muted)}
+.abar i{display:block;height:5px;border-radius:5px;background:#272738;overflow:hidden}.abar i b{display:block;height:100%;border-radius:5px}
+.pc-act{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto}
+.slots{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.slot{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;min-width:0}
+.slot small{color:var(--purple);font-size:10px;letter-spacing:1.5px;font-weight:800}
+.slot b{display:block;font:800 16px 'Barlow Condensed';margin:6px 0 2px;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{padding:5px 10px;border:1px solid var(--border);border-radius:20px;background:var(--panel2);color:var(--muted);font-size:10px;font-weight:700}
+.pill.green{background:#42e6a018;color:var(--green)}.pill.red{background:#ff667c18;color:var(--red)}
+.modal{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:90;padding:16px}
+.modal .card{width:100%;max-width:460px;max-height:90vh;overflow:auto}
+input[type=range]{padding:0;accent-color:var(--purple);border:0;background:transparent}
+.pick{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;margin-bottom:8px;text-align:left}
+@media(max-width:700px){.slots{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* compact layout + less scrolling */
+main{padding:20px 26px}
+h1{font-size:clamp(28px,4vw,40px);margin:3px 0}
+.section{margin-top:16px}.card{padding:16px}.metric strong{font-size:29px;margin:4px 0}
+.hero{padding:18px}.hero .team-title{font-size:32px}.hero .record{font-size:44px}
+.table-wrap{max-height:min(58vh,480px);overflow:auto;overscroll-behavior:contain}
+th{position:sticky;top:0;z-index:1}
+#scheduleList,#historyList,.log{max-height:min(60vh,520px);overflow:auto;overscroll-behavior:contain}
+@media(min-width:851px){
+aside{position:sticky;top:65px;align-self:start;max-height:calc(100vh - 65px);overflow:auto;padding:16px 12px}
+.nav{padding:10px 12px;margin:2px 0}.sidebar-team{margin-top:18px}
+#rList{max-height:calc(100vh - 300px);min-height:360px;overflow:auto;padding:2px 4px 2px 0;overscroll-behavior:contain}
+}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.fostrip{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.fostrip .chip b{color:var(--white)}
+.trl{max-height:min(44vh,360px);overflow:auto;border:1px solid var(--border);border-radius:9px;background:var(--panel2);overscroll-behavior:contain}
+.trp{display:flex;gap:10px;align-items:center;margin:0;padding:8px 11px;border-bottom:1px solid var(--border);cursor:pointer;color:var(--white);font-size:11px}
+.trp:last-child{border:0}.trp:hover{background:#ffffff08}.trp.on{background:color-mix(in srgb,var(--purple) 14%,transparent)}
+.trp input{width:auto;accent-color:var(--purple)}
+.trn{flex:1;min-width:0;display:flex;flex-direction:column}.trn b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.trn small{color:var(--muted);font-size:10px;margin-top:2px}
+.trsum{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}.trsum div{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px}.trsum small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px;font-weight:800;margin-bottom:4px}.trsum b{font:800 18px 'Barlow Condensed'}
+@media(max-width:600px){.trsum{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:14px 11px}}
+
+/* ===== v2: stats · all-star · sportsbook ===== */
+.tbar{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px;align-items:center}
+.tb{border:1px solid var(--border);background:var(--panel2);color:var(--muted);padding:9px 14px;border-radius:20px;font-weight:800;font-size:11px;letter-spacing:.5px;transition:.15s}
+.tb.sm{padding:6px 11px;font-size:10px}
+.tb:hover{border-color:var(--purple);color:var(--white)}
+.tb.on{background:var(--purple);border-color:var(--purple);color:#100d1a}
+.tb .ct{background:#0003;border-radius:9px;padding:1px 6px;margin-left:3px}
+.sep{width:1px;height:20px;background:var(--border);margin:0 4px}
+.srch{max-width:230px;padding:8px 11px;border-radius:20px;font-size:11px}
+.cf{display:inline-block;min-width:16px;text-align:center;font:800 9px Inter,sans-serif;padding:2px 5px;border-radius:4px;color:#06101a;vertical-align:middle}
+.cf.E{background:#38bdf8}.cf.W{background:#f472b6}
+th.srt{cursor:pointer;user-select:none;white-space:nowrap}th.srt:hover,th.srt.on{color:var(--purple)}
+.leads{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:11px}
+.lead{padding:13px}.lead small{display:block;color:var(--muted);font-size:9px;letter-spacing:1px;font-weight:800;margin-bottom:8px}
+.ld{display:flex;justify-content:space-between;gap:8px;padding:5px 0;font-size:11px;border-top:1px solid var(--border)}
+.ld.top{border:0;font-size:12px}.ld.top strong{color:var(--green);font:800 20px 'Barlow Condensed'}.ld em{color:var(--muted);font-style:normal;font-size:9px}
+.cut6 td{border-bottom:2px solid var(--purple)}.cut10 td{border-bottom:2px dashed var(--muted)}
+.asr{display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid var(--border);border-radius:6px}
+.asr:last-child{border:0}.asr .pos{width:30px;text-align:center;font-size:9px;font-weight:800;color:var(--purple);background:#a78bfa18;border-radius:5px;padding:3px 0}
+.asr .nmx{flex:1;min-width:0;display:flex;flex-direction:column}.asr .nmx b{font-size:12px}.asr .nmx small{color:var(--muted);font-size:10px;margin-top:2px}
+.asg-hero{background:linear-gradient(115deg,#21183c,#151425 60%,#1a2733);border-color:#39304e}
+.hl.asr,.frow.mine{background:color-mix(in srgb,var(--purple) 10%,transparent)}
+.ser.dn{opacity:.6}
+/* sportsbook */
+.seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:3px;gap:3px}
+.seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:7px 8px;border-radius:6px;font-weight:800;font-size:10px;letter-spacing:.5px}
+.seg button.on{background:var(--purple);color:#100d1a}
+.bk-layout{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start;margin-top:16px}
+.bk-slip{position:sticky;top:82px;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.slip-h{display:flex;align-items:center;gap:9px;padding:14px 16px;background:var(--panel2);font:800 14px 'Barlow Condensed';letter-spacing:1px;border-bottom:1px solid var(--border)}
+.slip-h .sl-tot{margin-left:auto;color:var(--green);font-size:12px}
+.slip-b{padding:14px 16px;max-height:calc(100vh - 190px);overflow:auto}
+.sl-item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);font-size:11px}
+.sl-item small{display:block;margin-top:3px;font-size:10px}.sl-r{display:flex;gap:8px;align-items:flex-start}
+.sl-r .x{border:0;background:transparent;color:var(--muted);font-size:18px;line-height:1;padding:0 2px}.sl-r .x:hover{color:var(--red)}
+.chips2{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}
+.sl-sum{margin-top:12px;background:var(--panel2);border-radius:9px;padding:11px 12px;font-size:11px;display:grid;gap:6px}
+.odd{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;margin-top:6px;padding:9px 11px;border:1px solid var(--border);background:var(--panel2);color:var(--white);border-radius:8px;text-align:left;transition:.12s}
+.odd small{color:var(--muted);font-size:10px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.odd b{font:800 16px 'Barlow Condensed';color:var(--green);white-space:nowrap}
+.odd:hover{border-color:var(--purple);transform:translateY(-1px)}
+.odd.on{background:color-mix(in srgb,var(--purple) 24%,var(--panel2));border-color:var(--purple)}.odd.on b{color:var(--white)}
+.gc.mine{border-color:color-mix(in srgb,var(--purple) 60%,var(--border))}
+.gc label,.mk3 label{margin:10px 0 0;font-size:9px;letter-spacing:1px}
+.mk3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.mk2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mk2 .odd{margin:0}
+.pbar{height:6px;background:#272738;border-radius:6px;overflow:hidden;margin-top:12px}.pbar i{display:block;height:100%;background:var(--green)}
+.props{margin-top:14px;border-top:1px solid var(--border);padding-top:10px}.props summary{cursor:pointer;color:var(--purple);font-size:10px;font-weight:800;letter-spacing:1px}
+.prow{display:grid;grid-template-columns:1fr 170px;gap:10px;align-items:center;padding:6px 0;font-size:11px}.pr2{display:grid;grid-template-columns:1fr 1fr;gap:6px}.pr2 .odd{margin:0}
+.frow{display:grid;grid-template-columns:1fr 50px 112px;gap:8px;align-items:center;padding:6px 6px;border-bottom:1px solid var(--border);font-size:11px;border-radius:6px}
+.frow:last-child{border:0}.frow .odd{margin:0;padding:7px 10px}
+.obet{border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--panel2)}
+.leg{font-size:11px;padding:3px 0}
+@media(max-width:900px){
+ .bk-layout{grid-template-columns:1fr}
+ .bk-slip{position:fixed;left:8px;right:8px;bottom:8px;top:auto;z-index:60;box-shadow:0 -8px 30px #000a}
+ .slip-h{cursor:pointer}.slip-b{display:none;max-height:62vh}.bk-slip.open .slip-b{display:block}
+ #betBody{padding-bottom:70px}
+ .mk3{grid-template-columns:1fr}.prow{grid-template-columns:1fr}
+}
+@media(min-width:901px){.slip-h{cursor:default}}
+</style>
+</head>
+<body>
+<header>
+ <div class="logo">FRANCHISE<span>.</span></div>
+ <div class="header-right"><span class="status" id="cloudBadge" style="cursor:pointer;color:var(--muted)" onclick="navigate('settings')">● LOCAL SAVE</span><span id="headerSeason">SEASON 1</span></div>
+</header>
+
+<div class="app">
+<aside>
+ <div class="nav-label">MANAGEMENT</div>
+ <button class="nav active" data-page="dashboard"><span class="ico">▦</span> Dashboard</button>
+ <button class="nav" data-page="roster"><span class="ico">♟</span> Roster</button>
+ <button class="nav" data-page="game"><span class="ico">🏀</span> Game Center</button>
+ <button class="nav" data-page="season"><span class="ico">▤</span> Season</button>
+ <button class="nav" data-page="front"><span class="ico">💼</span> Front Office</button>
+ <button class="nav" data-page="bet"><span class="ico">🎲</span> Betting</button>
+ <button class="nav" data-page="online"><span class="ico">🌐</span> Online</button>
+ <button class="nav" data-page="leaders"><span class="ico">🏅</span> Leaderboards</button>
+ <button class="nav" data-page="stats"><span class="ico">📊</span> Stats</button>
+ <button class="nav" data-page="playoffs"><span class="ico">🏆</span> Playoffs</button>
+ <button class="nav" data-page="history"><span class="ico">◷</span> History</button>
+ <button class="nav" data-page="settings"><span class="ico">⚙</span> Team Settings</button>
+ <div class="sidebar-team">
+  <small>YOUR FRANCHISE</small>
+  <strong id="sideTeam">YOUR TEAM</strong>
+  <p id="sideRecord">0–0 · .000</p>
+  <button id="sideNew" class="btn success" style="display:none;width:100%;margin-top:12px" onclick="newSeason()">START NEW SEASON</button>
+ </div>
+</aside>
+
+<main>
+<section class="page active" id="dashboard">
+ <div class="topline">Franchise management / Overview</div>
+ <h1>Front office <span>dashboard.</span></h1>
+ <p class="sub">Build your team. Manage your rotation. Chase the perfect season.</p>
+
+ <div class="section hero">
+  <div>
+   <div class="topline">YOUR FRANCHISE</div>
+   <div class="team-title" id="dashName">YOUR TEAM</div>
+   <div class="sub" id="dashInfo">15 players · 82-game season</div>
+   <div class="row" style="margin-top:15px">
+    <span class="pill" id="dashRating">TEAM OVR 75</span>
+    <span class="pill" id="dashStanding">0 W - 0 L</span>
+   </div>
+  </div>
+  <div style="text-align:center">
+   <div class="topline">SEASON RECORD</div>
+   <div class="record" id="dashRecord">0-0</div>
+   <small class="muted" id="dashPct">WIN PERCENTAGE .000</small>
+  </div>
+ </div>
+
+ <div class="section grid stats-grid">
+  <div class="card metric"><small>TEAM OVERALL</small><strong class="purple" id="mOverall">75</strong><p>Average player rating</p></div>
+  <div class="card metric"><small>POINTS PER GAME</small><strong id="mPPG">0.0</strong><p>Season scoring average</p></div>
+  <div class="card metric"><small>GAMES REMAINING</small><strong id="mRemaining">82</strong><p>Regular season</p></div>
+  <div class="card metric"><small>WIN STREAK</small><strong class="green" id="mStreak">0</strong><p>Consecutive victories</p></div>
+ </div>
+
+ <div class="section grid" style="grid-template-columns:repeat(auto-fit,minmax(250px,1fr))">
+  <div class="card">
+   <div class="section-head"><h2>Next matchup</h2><span class="pill">UPCOMING</span></div>
+   <div class="topline" id="nextGameNo">GAME 01</div>
+   <h2 style="font-size:31px;margin:8px 0" id="nextOpponent">Boston Celtics</h2>
+   <p class="sub" id="nextOpponentInfo">Opponent rating: 82</p>
+   <button class="btn primary" style="margin-top:15px" onclick="navigate('game')">GO TO GAME CENTER →</button>
+  </div>
+  <div class="card">
+   <div class="section-head"><h2>Starting five</h2><span class="pill">LINEUP</span></div>
+   <div id="dashLineup"></div>
+  </div>
+ </div>
+
+ <div id="seasonBanner"></div>
+ <div class="section card">
+  <div class="section-head"><h2>Season progress</h2><span class="sub" id="progressText">0 / 82 games</span></div>
+  <div class="progress"><i id="seasonProgress" style="width:0%"></i></div>
+  <div class="between" style="margin-top:12px"><small class="muted">START</small><small class="muted">82 GAMES</small></div>
+ </div>
+</section>
+
+<section class="page" id="roster">
+ <div class="topline">Front office / Team management</div>
+ <h1>Manage your <span>team.</span></h1>
+ <p class="sub">Set your starting five, balance positions, develop players and manage contracts. Every change saves automatically.</p>
+
+ <div class="section grid stats-grid">
+  <div class="card metric"><small>ROSTER SIZE</small><strong id="rCount">15</strong><p>of 15 max</p></div>
+  <div class="card metric"><small>TEAM OVR</small><strong id="rOverall" class="purple">75</strong><p>Starters + bench</p></div>
+  <div class="card metric"><small>PAYROLL</small><strong id="rPay">$0M</strong><p id="rPaySub">Cap space</p></div>
+  <div class="card metric"><small>AVERAGE AGE</small><strong id="rAge">0</strong><p>Whole roster</p></div>
+ </div>
+
+ <div class="section card">
+  <div class="section-head"><h2>Starting five</h2><div class="row"><button class="btn sm" onclick="roAuto('best')">AUTO: BEST FIVE</button><button class="btn sm" onclick="roAuto('bal')">AUTO: BALANCED</button></div></div>
+  <div class="slots" id="rLineup"></div>
+  <div class="form-grid" style="margin-top:18px">
+   <div><label>TEAM STRENGTHS (STARTERS)</label><div id="rStrength" class="grid" style="gap:9px"></div></div>
+   <div><label>POSITION BALANCE</label><div id="rBal"></div></div>
+  </div>
+ </div>
+
+ <div class="section">
+  <div class="section-head"><h2>Players</h2><span class="pill" id="rShown"></span></div>
+  <div class="row" style="margin-bottom:14px">
+   <input id="rQ" placeholder="Search players" style="max-width:210px" oninput="RVW.q=this.value;renderRoster()">
+   <select id="rPos" style="max-width:130px" onchange="RVW.pos=this.value;renderRoster()"><option value="">All positions</option><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select>
+   <select id="rSort" style="max-width:170px" onchange="RVW.sort=this.value;renderRoster()"><option value="ovr">Sort: Overall</option><option value="pos">Sort: Position</option><option value="age">Sort: Age</option><option value="sal">Sort: Salary</option><option value="name">Sort: Name</option></select>
+   <button class="btn primary sm" onclick="addPlayer()">+ ADD ROOKIE</button>
+   <button class="btn danger sm" onclick="resetRoster()">RESET ROSTER</button>
+  </div>
+  <div class="rgrid" id="rList"></div>
+ </div>
+
+ <div class="section card">
+  <h2>How development works</h2>
+  <p class="sub" style="margin-top:8px">Offense drives scoring, defense limits opponents, 3-point rating lifts perimeter shooting and rebounding controls possessions. Young players improve every offseason and veterans decline. Set a <b>training focus</b> on a player to give that rating an extra boost at season rollover. Players on an expiring contract can be extended from their card.</p>
+ </div>
+</section>
+
+<section class="page" id="game">
+ <div class="topline">Competition / Game center</div>
+ <h1>Game <span>center.</span></h1>
+ <p class="sub">Play one quarter at a time. Every quarter generates new scores and player statistics.</p>
+
+ <div class="section score-card">
+  <div class="topline" id="gameStatus">REGULAR SEASON · GAME 01</div>
+  <div class="scoreline" style="margin-top:18px">
+   <div>
+    <div class="team-label" id="homeName">YOUR TEAM</div>
+    <div class="bigscore green" id="homeScore">0</div>
+    <small class="muted">YOU</small>
+   </div>
+   <div class="score-vs">VS</div>
+   <div>
+    <div class="team-label" id="awayName">OPPONENT</div>
+    <div class="bigscore" id="awayScore">0</div>
+    <small class="muted">OPPONENT</small>
+   </div>
+  </div>
+  <div class="quarters" id="quarterScores">
+   <div>Q1<strong>–</strong></div><div>Q2<strong>–</strong></div><div>Q3<strong>–</strong></div><div>Q4<strong>–</strong></div><div>STATUS<strong>READY</strong></div>
+  </div>
+  <div class="game-controls">
+   <button class="btn primary" id="startGame" onclick="startGame()">START GAME</button>
+   <button class="btn success" id="nextQuarter" onclick="playQuarter()" disabled>PLAY NEXT QUARTER →</button>
+   <button class="btn" onclick="simGame()">SIM GAME</button>
+   <button class="btn" onclick="simGames(10)">SIM 10</button>
+   <button class="btn" onclick="simGames(82)">SIM SEASON</button>
+   <button class="btn" onclick="simGames(300)">SIM TO END</button>
+   <button class="btn success" id="gcNew" style="display:none" onclick="newSeason()">START NEW SEASON →</button>
+   <button class="btn" onclick="navigate('roster')">EDIT ROSTER</button>
+  </div>
+  <p class="sub" id="quarterMessage" style="margin-top:15px">Prepare your lineup before tip-off.</p>
+ </div>
+
+ <div class="section grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+  <div class="card">
+   <div class="topline">YOUR TEAM</div>
+   <h2 id="gameHomeRating" class="purple">OVR 75</h2>
+   <p class="sub">Calculated from the starting lineup and bench.</p>
+  </div>
+  <div class="card">
+   <div class="topline">OPPONENT</div>
+   <h2 id="gameAwayRating">OVR 82</h2>
+   <p class="sub">Opponent generated from league strength.</p>
+  </div>
+ </div>
+
+ <div class="section card">
+  <div class="section-head"><h2>Game commentary</h2><span class="pill">PLAY BY PLAY</span></div>
+  <div class="log" id="gameLog"><div class="empty">No game has started yet.</div></div>
+ </div>
+
+ <div class="section card">
+  <div class="section-head"><h2>Box score</h2><span class="sub">INDIVIDUAL GAME STATISTICS</span></div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>PLAYER</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>FG</th><th>3PT</th><th>MIN</th></tr></thead>
+    <tbody id="boxBody"><tr><td colspan="9" class="empty">Box score available after the game begins.</td></tr></tbody>
+   </table>
+  </div>
+ </div>
+</section>
+
+<section class="page" id="season">
+ <div class="topline">Franchise / Competition</div>
+ <h1>Regular <span>season.</span></h1>
+ <p class="sub">An 82-game schedule. Every result affects your franchise record.</p>
+ <div class="section grid stats-grid">
+  <div class="card metric"><small>WINS</small><strong class="green" id="sWins">0</strong><p>Victories</p></div>
+  <div class="card metric"><small>LOSSES</small><strong class="red" id="sLosses">0</strong><p>Defeats</p></div>
+  <div class="card metric"><small>WIN RATE</small><strong id="sPct">.000</strong><p>Winning percentage</p></div>
+  <div class="card metric"><small>GAMES PLAYED</small><strong id="sPlayed">0</strong><p>Out of 82</p></div>
+ </div>
+ <div class="section card">
+  <div class="section-head"><h2>Season schedule</h2><span class="pill" id="scheduleCount">0 / 82 PLAYED</span></div>
+  <div id="scheduleList"></div>
+ </div>
+ <div class="section card">
+  <div class="section-head"><h2>League standings</h2><span class="sub">SIMULATED LEAGUE</span></div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr><th>RANK</th><th>TEAM</th><th>W</th><th>L</th><th>PCT</th><th>OVR</th></tr></thead>
+    <tbody id="standingsBody"></tbody>
+   </table>
+  </div>
+ </div>
+ <div class="section row">
+  <div id="teamView" style="width:100%"></div>
+  <button class="btn danger" onclick="newSeason()">START NEW SEASON</button>
+ </div>
+</section>
+
+<section class="page" id="front">
+ <div class="topline">Front office / Management</div>
+ <h1>Team <span>management.</span></h1>
+ <p class="sub">Manage payroll against the salary cap, release players, sign free agents and trade with the league.</p>
+ <div id="frontBody"></div>
+</section>
+
+<section class="page" id="bet">
+ <div class="topline">League / Sportsbook</div>
+ <h1>Betting <span>lounge.</span></h1>
+ <p class="sub">Virtual coins only, no real money. Build a slip, stack a parlay, bet the playoffs and the All-Star Game.</p>
+ <div id="betBody"></div>
+</section>
+
+<section class="page" id="online"></section>
+
+<section class="page" id="leaders">
+ <div class="topline">League / Rankings</div>
+ <h1>Global <span>leaderboards.</span></h1>
+ <p class="sub">Every account's franchise, ranked live. Your numbers update automatically as you play.</p>
+ <div id="lbTabs"></div>
+ <div id="lbMe"></div>
+ <div class="section card" id="lbBody"><div class="empty">Sign in to see the leaderboards.</div></div>
+</section>
+
+<section class="page" id="stats">
+ <div class="topline">Franchise / Analytics</div>
+ <h1>Player & team <span>stats.</span></h1>
+ <p class="sub">League-wide player and team stats for the East and West, All-Star weekend, and your own franchise. Every team plays every game you play.</p>
+ <div id="statsBody"></div>
+</section>
+
+<section class="page" id="playoffs">
+ <div class="topline">Franchise / Postseason</div>
+ <h1>Play-in & <span>playoffs.</span></h1>
+ <p class="sub">East and West each send their top 6 seeds directly. Seeds 7–10 fight through the play-in for the last two spots. Then 16 teams battle in best-of-7 series, with the conference champions meeting in the Finals.</p>
+ <div id="postBody"></div>
+</section>
+
+<section class="page" id="history">
+ <div class="topline">Franchise / Archives</div>
+ <h1>Game <span>history.</span></h1>
+ <p class="sub">Every completed game is recorded here.</p>
+ <div class="section card">
+  <div class="section-head"><h2>Results archive</h2><span class="pill" id="historyCount">0 GAMES</span></div>
+  <div id="historyList"><div class="empty">No completed games yet.</div></div>
+ </div>
+</section>
+
+<section class="page" id="settings">
+ <div class="topline">Front office / Configuration</div>
+ <h1>Team <span>identity.</span></h1>
+ <p class="sub">Customize your franchise identity and opponent settings.</p>
+ <div class="section card">
+  <h2>Franchise identity</h2>
+  <div class="form-grid" style="margin-top:17px">
+   <div class="field"><label>TEAM NAME</label><input id="teamNameInput" maxlength="28"></div>
+   <div class="field"><label>ABBREVIATION</label><input id="teamAbbrInput" maxlength="4"></div>
+   <div class="field"><label>HOME CITY</label><input id="teamCityInput" maxlength="25"></div>
+   <div class="field"><label>TEAM COLOR</label><input type="color" id="teamColorInput" value="#a78bfa"></div>
+  </div>
+  <button class="btn primary" style="margin-top:17px" onclick="saveSettings()">SAVE TEAM IDENTITY</button>
+ </div>
+ <div class="section card">
+  <h2>Simulation settings</h2>
+  <p class="sub" style="margin:10px 0 17px">These settings affect future games.</p>
+  <div class="form-grid">
+   <div class="field"><label>DIFFICULTY</label>
+    <select id="difficulty"><option value="realistic">Realistic</option><option value="hard">Hard</option><option value="easy">Easy</option></select>
+   </div>
+   <div class="field"><label>QUARTER LENGTH</label>
+    <select id="quarterLength"><option value="12">12 minutes (NBA)</option><option value="10">10 minutes</option><option value="8">8 minutes</option></select>
+   </div>
+  </div>
+  <button class="btn primary" style="margin-top:17px" onclick="saveSettings()">SAVE SETTINGS</button>
+ </div>
+ <div class="section card">
+  <h2>Franchise data</h2>
+  <p class="sub" id="cloudNote" style="margin:10px 0">Playing without an account. Progress is only stored in this browser.</p>
+  <div class="row"><button class="btn primary" onclick="window.Cloud?Cloud.now():toast('Cloud save is not available right now.')">SAVE TO CLOUD NOW</button><button class="btn" onclick="window.Cloud?Cloud.pull():toast('Cloud save is not available right now.')">LOAD CLOUD SAVE</button><button class="btn" onclick="window.OL?OL.out():toast('Not signed in.')">SIGN OUT</button><button class="btn danger" onclick="resetAll()">RESET ENTIRE FRANCHISE</button></div>
+ </div>
+</section>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(n,min=1,max=99)=>Math.max(min,Math.min(max,Number(n)||min));
+const rand=(min,max)=>Math.floor(Math.random()*(max-min+1))+min;
+const average=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:0;
+const positions=['PG','SG','SF','PF','C'];
+
+const defaults=[
+ ['Marcus Reed','PG',26,91,94,76,92,58,true],
+ ['Jaylen Carter','SG',24,89,91,74,94,55,true],
+ ['Darius King','SF',27,88,88,86,83,76,true],
+ ['Anthony Brooks','PF',25,86,83,89,73,91,true],
+ ['Malik Johnson','C',28,85,79,94,35,96,true],
+ ['Chris Parker','PG',23,81,83,70,86,48,false],
+ ['Tyler James','SG',22,80,84,72,89,49,false],
+ ['Jordan Davis','SF',24,79,79,81,78,70,false],
+ ['Andre Williams','PF',29,78,75,85,68,85,false],
+ ['Kevin Mitchell','C',26,77,72,87,32,89,false],
+ ['Ethan Moore','SG',21,75,79,67,84,44,false],
+ ['Noah Wilson','SF',23,74,74,77,75,68,false],
+ ['Isaiah Brown','PF',25,73,70,80,65,81,false],
+ ['Liam Thompson','C',24,72,67,83,30,85,false],
+ ['Caleb Martin','PG',20,70,73,64,76,40,false]
+];
+
+const leagueTeams=['Boston Celtics','Golden State Warriors','Los Angeles Lakers','Denver Nuggets','Milwaukee Bucks','New York Knicks','Miami Heat','Phoenix Suns','Dallas Mavericks','Cleveland Cavaliers','Philadelphia 76ers','Minnesota Timberwolves','Oklahoma City Thunder','Houston Rockets','Chicago Bulls','Atlanta Hawks','Orlando Magic','Indiana Pacers','Sacramento Kings','Memphis Grizzlies','Brooklyn Nets','Toronto Raptors','Detroit Pistons','San Antonio Spurs','LA Clippers','Portland Trail Blazers','Utah Jazz','Charlotte Hornets','Washington Wizards'];
+
+const FN=['Marcus','Jaylen','Darius','Terrence','Malik','DeAndre','Tyrese','Cameron','Jalen','Elijah','Xavier','Isaiah','Trevor','Devin','Jamal','Nico','Mateo','Luka','Andre','Cole','Brandon','Jordan','Kendrick','Rashad','Dominic','Gavin','Micah','Zion','Caleb','Omar'];
+const LN=['Reed','Carter','Holloway','Brooks','Whitfield','Okafor','Navarro','Sutton','Beaumont','Ellison','Mbeki','Castillo','Hartman','Delacroix','Pruitt','Vance','Adeyemi','Lindqvist','Roberson','Kowalski','Tanaka','Mercer','Fontaine','Gallagher','Ibrahim','Calloway','Bishop','Moreau','Santos','Whitlock'];
+const PROF={PG:[2,-4,6,-14],SG:[3,-3,5,-12],SF:[1,0,0,-2],PF:[-1,3,-8,8],C:[-3,5,-25,14]};
+function makeName(used){let n;do{n=FN[rand(0,FN.length-1)]+' '+LN[rand(0,LN.length-1)]}while(used.includes(n));return n}
+function mkP(id,pos,base,age,used,starter){const m=PROF[pos],a=i=>clamp(base+m[i]+rand(-5,5),25,95);const p={id,name:makeName(used),pos,age,off:a(0),def:a(1),three:a(2),reb:a(3),starter,ovr:0};p.ovr=calc(p);p.sal=salOf(p);p.yrs=rand(1,5);return p}
+function freshRoster(base=74){const ps=['PG','SG','SF','PF','C'],bases=[86,80,77,74,72,68,66,64,62,60,58,57,56,55,54].map(b=>b+base-74),names=[];return bases.map((b,i)=>{const p=mkP(i+1,ps[i%5],b+rand(-2,2),i<5?rand(24,31):rand(20,33),names,i<5);names.push(p.name);return p})}
+function makeRookie(){return mkP(state.nextId++,positions[rand(0,4)],rand(52,68),rand(19,22),state.roster.map(x=>x.name),false)}
+leagueTeams.push('New Orleans Pelicans');
+const BASE={'Oklahoma City Thunder':82,'Boston Celtics':81,'Cleveland Cavaliers':80,'Denver Nuggets':80,'New York Knicks':79,'Minnesota Timberwolves':78,'Houston Rockets':78,'Indiana Pacers':77,'Los Angeles Lakers':77,'Golden State Warriors':76,'Milwaukee Bucks':76,'LA Clippers':75,'Orlando Magic':75,'Dallas Mavericks':75,'Miami Heat':74,'Memphis Grizzlies':74,'Detroit Pistons':74,'Atlanta Hawks':73,'Sacramento Kings':72,'Phoenix Suns':72,'Philadelphia 76ers':72,'San Antonio Spurs':72,'Chicago Bulls':70,'Toronto Raptors':70,'New Orleans Pelicans':69,'Portland Trail Blazers':69,'Brooklyn Nets':67,'Utah Jazz':66,'Charlotte Hornets':66,'Washington Wizards':65};
+const PAL=['#a78bfa','#42e6a0','#f59e0b','#38bdf8','#f472b6','#fb7185','#facc15','#34d399'];
+const CAP=155;
+function salOf(p){const f=Math.min(1,Math.max(0,(calc(p)-50)/38));return Math.round((.8+f*f*30)*10)/10}
+function ovrOf(r){const s=[...r].map(calc).sort((a,b)=>b-a);return Math.round(average(s.slice(0,5))*.75+average(s.slice(5,10))*.25)}
+function makePlayer(d,i){
+ return {id:i+1,name:d[0],pos:d[1],age:d[2],off:d[4],def:d[5],three:d[6],reb:d[7],starter:d[8],ovr:d[3]};
+}
+function calc(p){
+ return Math.round(p.off*.35+p.def*.25+p.three*.2+p.reb*.2);
+}
+function initialState(){
+ return {
+  team:{name:'YOUR TEAM',abbr:'YTM',city:'HOME CITY',color:'#a78bfa'},
+  roster:freshRoster(),
+  settings:{difficulty:'realistic',quarterLength:12},
+  season:1,wins:0,losses:0,played:0,streak:0,
+  pointsFor:0,pointsAgainst:0,
+  schedule:[],history:[],standings:[],current:null,nextId:16,picked:false,league:null,fa:[],teamKey:null,bank:1000,bets:[],betLog:[],stake:50,lp:{},lt:{},asg:null,allstars:[],oddsFmt:'dec',betStats:{won:0,lost:0,push:0,net:0,best:0,streak:0,wagered:0}
+ };
+}
+let state;
+
+function norm(s){s=s&&typeof s==='object'?s:initialState();s.pstats=s.pstats||{};s.seasons=s.seasons||[];s.fa=s.fa||[];s.league=s.league||null;s.view=null;if(s.bank==null)s.bank=1000;s.bets=s.bets||[];s.betLog=s.betLog||[];s.tradeLog=s.tradeLog||[];
+ s.lp=s.lp||{};s.lt=s.lt||{};s.allstars=s.allstars||[];s.asg=s.asg||null;s.oddsFmt=s.oddsFmt||'dec';
+ s.bets=s.bets.map(b=>b&&b.sels?b:{id:Math.random().toString(36).slice(2),type:'single',stake:b.stake,odds:b.odds,season:s.season,label:b.label,sels:[{kind:b.kind,mkt:b.kind==='fut'?'fut|champ':b.kind+'|'+b.gno,gno:b.gno,side:b.side,line:b.line,odds:b.odds,label:b.label,sub:'',grp:b.kind==='fut'?'futchamp':'g'+b.gno,res:null}]});
+ if(!s.betStats){const L=s.betLog||[];s.betStats={won:L.filter(x=>x.res===1).length,lost:L.filter(x=>x.res===0).length,push:L.filter(x=>x.res===2).length,net:L.reduce((a,x)=>a+(x.net||0),0),best:Math.max(0,...L.map(x=>x.net||0)),streak:0,wagered:L.reduce((a,x)=>a+(x.stake||0),0)}}
+ if(s.post&&!s.post.v2&&!s.post.champ){s.post=null;if(s.current&&s.current.post&&!s.current.done)s.current=null}
+ return s}
+try{state=JSON.parse(localStorage.getItem('franchiseSave'))||initialState()}catch(e){state=initialState()}
+state=norm(state);
+function save(){
+ try{localStorage.setItem('franchiseSave',JSON.stringify(state));localStorage.setItem('franchiseAt',String(Date.now()))}catch(e){}
+ render();
+ if(window.Cloud)Cloud.touch();
+}
+function toast(msg){
+ const t=$('toast');t.textContent=msg;t.style.display='block';clearTimeout(toast.t);
+ toast.t=setTimeout(()=>t.style.display='none',2200);
+}
+function teamRating(){
+ const s=starters(),b=state.roster.filter(p=>!s.includes(p)&&!p.inj).sort((a,b)=>calc(b)-calc(a)).slice(0,5);
+ return Math.round(average(s.map(calc))*.75+(b.length?average(b.map(calc)):average(s.map(calc)))*.25);
+}
+function starters(){
+ const h=state.roster.filter(p=>!p.inj),s=h.filter(p=>p.starter).slice(0,5);
+ if(s.length<5)h.filter(p=>!s.includes(p)).sort((a,b)=>calc(b)-calc(a)).slice(0,5-s.length).forEach(p=>s.push(p));
+ return s;
+}
+function lineup(){
+ const s=starters();
+ const r=state.roster.filter(p=>!s.includes(p)).sort((a,b)=>(a.inj?1:0)-(b.inj?1:0)||calc(b)-calc(a));return [...s,...r];
+}
+function others(){return leagueTeams.filter(t=>t!==state.teamKey)}
+function initStrengths(){state.strengths={};leagueTeams.forEach(n=>state.strengths[n]=state.league?.[n]?ovrOf(state.league[n].roster):63+rand(0,12)+rand(0,12))}
+function generateSchedule(){
+ if(!state.strengths)initStrengths();
+ state.schedule=Array.from({length:82},(_,i)=>{
+  const O=others(),name=O[(i*7+state.season*3)%O.length];
+  return {number:i+1,opponent:name,rating:state.strengths[name],home:i%2===0,result:null};
+ });
+}
+if(!state.schedule?.length)generateSchedule();
+function resetStandings(){initStrengths();state.lt={};state.lp={};state.standings=others().map(n=>({name:n,w:0,l:0}))}
+if(!state.strengths||!state.standings?.length||state.standings.length!==others().length||state.standings.some(t=>t.w+t.l>state.played))resetStandings();
+
+function navigate(page){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.page===page));
+ $(page).classList.add('active');history.replaceState(null,'','#'+page);
+ window.scrollTo(0,0);
+ render();
+ if(window.Cloud)page==='leaders'?Cloud.openBoards():Cloud.closeBoards();
+}
+document.querySelectorAll('.nav').forEach(n=>n.addEventListener('click',()=>navigate(n.dataset.page)));
+
+function render(){
+ ensureLeague();
+ $('headerSeason').textContent='SEASON '+state.season;
+ $('sideTeam').textContent=state.team.name;
+ $('sideRecord').textContent=state.wins+'–'+state.losses+' · '+pct();
+ $('dashName').textContent=state.team.name;
+ $('dashInfo').textContent=state.roster.length+' players · 82-game season';
+ $('dashRating').textContent='TEAM OVR '+teamRating();
+ $('dashStanding').textContent=state.wins+' W - '+state.losses+' L';
+ $('dashRecord').textContent=state.wins+'-'+state.losses;
+ $('dashPct').textContent='WIN PERCENTAGE '+pct();
+ $('mOverall').textContent=teamRating();
+ $('mPPG').textContent=state.played?(state.pointsFor/state.played).toFixed(1):'0.0';
+ $('mRemaining').textContent=82-state.played;
+ $('seasonBanner').innerHTML=state.played>=82?`<div class="banner">Regular season complete: ${state.wins}–${state.losses} (${pct()}). ${state.post?.champ?(state.post.champ==='*'?'🏆 YOU ARE THE CHAMPIONS! ':nm(state.post.champ)+' won the title. ')+'<br><button class="btn success" style="margin-top:10px" onclick="newSeason()">START NEW SEASON →</button>':state.post?.next?'Postseason: next up is '+state.post.next.label+'.':'You are out of the postseason.'}</div>`:'';
+ $('mStreak').textContent=(state.streak>0?'W':state.streak<0?'L':'')+Math.abs(state.streak);$('mStreak').className=state.streak<0?'red':'green';
+ $('progressText').textContent=state.played+' / 82 games';
+ $('seasonProgress').style.width=(state.played/82*100)+'%';
+ $('dashLineup').innerHTML=starters().map(p=>`<div class="between" style="padding:7px 0;border-bottom:1px solid var(--border)"><span>${p.pos} · ${esc(p.name)}</span><strong class="purple">${calc(p)}</strong></div>`).join('');
+ const next=nextG();
+ $('nextGameNo').textContent=next?(next.post?next.label:'GAME '+String(next.number).padStart(2,'0')):'SEASON COMPLETE';
+ $('nextOpponent').textContent=next?next.opponent:'Season completed';
+ $('nextOpponentInfo').textContent=next?'Opponent rating: '+next.rating:'Start a new season to play again.';
+ $('rCount').textContent=state.roster.length;
+ $('rOverall').textContent=teamRating();
+ $('sWins').textContent=state.wins;$('sLosses').textContent=state.losses;
+ $('sPct').textContent=pct();$('sPlayed').textContent=state.played;
+ $('scheduleCount').textContent=state.played+' / 82 PLAYED';
+ $('historyCount').textContent=state.history.length+' GAMES';
+ $('teamNameInput').value=state.team.name;
+ $('teamAbbrInput').value=state.team.abbr;
+ $('teamCityInput').value=state.team.city;
+ $('teamColorInput').value=state.team.color;
+ $('difficulty').value=state.settings.difficulty;
+ $('quarterLength').value=state.settings.quarterLength;
+ renderRoster();renderSchedule();renderStandings();renderHistory();renderGame();renderPost();renderStats();
+ if(!state.picked)showPicker();renderFront();renderTeamView();renderBet();
+ {const over=state.post?.champ?'':'none';$('sideNew').style.display=over||'block';$('gcNew').style.display=over||'inline-block'}
+}
+function pct(){return state.played?(state.wins/state.played).toFixed(3):'.000'}
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+const RVW={q:'',pos:'',sort:'ovr'},POSORD=['PG','SG','SF','PF','C'];
+const rCol=v=>v>=80?'var(--green)':v>=65?'var(--purple)':v>=50?'#f59e0b':'var(--red)';
+const rBar=(l,v)=>`<div class="abar"><span>${l}</span><i><b style="width:${v}%;background:${rCol(v)}"></b></i><span style="color:var(--white);font-weight:700">${v}</span></div>`;
+const rTrend=p=>p.age<=24?['RISING','green']:p.age<=29?['PRIME','']:['DECLINING','red'];
+const rFocus={off:'Offense',def:'Defense',three:'3-point',reb:'Rebounding'};
+function rStat(p){const t=state.pstats[p.id];return t&&t.gp?`${(t.pts/t.gp).toFixed(1)} PPG · ${(t.reb/t.gp).toFixed(1)} RPG · ${(t.ast/t.gp).toFixed(1)} APG`:'No games played yet'}
+function renderRoster(){
+ if(!$('rList'))return;
+ const r=state.roster,s=starters(),pay=payroll(r),room=CAP-pay;
+ $('rPay').textContent=$m(pay);$('rPaySub').textContent=(room<0?'Over the cap by ':'Cap space ')+$m(Math.abs(room));$('rPaySub').style.color=room<0?'var(--red)':'';
+ $('rAge').textContent=r.length?average(r.map(p=>p.age)).toFixed(1):'0';
+ $('rLineup').innerHTML=[...s].sort((a,b)=>POSORD.indexOf(a.pos)-POSORD.indexOf(b.pos)).map(p=>`<div class="slot"><small>${p.pos}</small><b>${esc(p.name)}</b><span class="rating" style="color:${rCol(calc(p))}">${calc(p)}</span><div class="sub">${p.age} yrs</div></div>`).join('');
+ $('rStrength').innerHTML=[['OFF','off'],['DEF','def'],['3PT','three'],['REB','reb']].map(([l,k])=>rBar(l,s.length?Math.round(average(s.map(p=>p[k]))):0)).join('');
+ const cnt={},sc={};POSORD.forEach(x=>{cnt[x]=0;sc[x]=0});r.forEach(p=>cnt[p.pos]++);s.forEach(p=>sc[p.pos]++);
+ const w=[];POSORD.forEach(x=>{if(!cnt[x])w.push('No '+x+' on the roster')});
+ if(!sc.C&&!sc.PF)w.push('No big man in the starting five, rebounding will suffer');
+ if(!sc.PG&&!sc.SG)w.push('No guard in the starting five');
+ const hurt=r.filter(p=>p.starter&&p.inj);if(hurt.length)w.push(hurt.map(p=>p.name).join(', ')+(hurt.length>1?' are':' is')+' injured and auto-replaced');
+ if(room<0)w.push('Payroll is over the cap');
+ if(r.length<10)w.push('Thin roster: only '+r.length+' players');
+ $('rBal').innerHTML='<div class="chips">'+POSORD.map(x=>`<span class="chip">${x} ${cnt[x]}</span>`).join('')+'</div>'+(w.length?'<div style="margin-top:10px">'+w.map(x=>`<div class="sub" style="color:#f59e0b">⚠ ${esc(x)}</div>`).join('')+'</div>':'<div class="sub green" style="margin-top:10px">✓ Roster looks balanced</div>');
+ const SO={ovr:(a,b)=>calc(b)-calc(a),age:(a,b)=>a.age-b.age,sal:(a,b)=>(b.sal||0)-(a.sal||0),name:(a,b)=>a.name.localeCompare(b.name),pos:(a,b)=>POSORD.indexOf(a.pos)-POSORD.indexOf(b.pos)||calc(b)-calc(a)};
+ const q=RVW.q.trim().toLowerCase(),L=r.filter(p=>(!RVW.pos||p.pos===RVW.pos)&&(!q||p.name.toLowerCase().includes(q))).sort(SO[RVW.sort]||SO.ovr);
+ $('rShown').textContent=L.length+' OF '+r.length+' SHOWN';
+ $('rList').innerHTML=L.map(p=>{const isS=s.includes(p),[tl,tc]=rTrend(p),y=p.yrs||1;
+  return `<div class="pcard ${isS?'st':''} ${p.inj?'out':''}">
+  <div class="pc-top"><div><div class="pc-name">${esc(p.name)}</div><div class="pc-meta">${p.pos} · Age ${p.age} · ${isS?'<span class="purple">STARTER</span>':'BENCH'}</div></div><div class="pc-ovr" style="color:${rCol(calc(p))}">${calc(p)}</div></div>
+  <div class="row" style="gap:5px">${p.inj?`<span class="pill red">OUT ${p.inj}</span>`:''}<span class="pill ${tc}">${tl}</span>${p.focus?`<span class="pill">TRAINING: ${rFocus[p.focus].toUpperCase()}</span>`:''}${y<=1?'<span class="pill red">EXPIRING</span>':''}</div>
+  <div class="grid" style="gap:7px">${rBar('OFF',p.off)}${rBar('DEF',p.def)}${rBar('3PT',p.three)}${rBar('REB',p.reb)}</div>
+  <div class="pc-line"><span>${$m(p.sal||0)} · ${y} yr${y>1?'s':''}</span><span>${rStat(p)}</span></div>
+  <div class="pc-act"><button class="btn sm" onclick="roSwap(${p.id})">${isS?'SUB OUT':'SUB IN'}</button><button class="btn sm" onclick="roEdit(${p.id})">EDIT</button>${y<=1?`<button class="btn sm success" onclick="roExt(${p.id})">EXTEND</button>`:''}<button class="btn sm danger" onclick="roRel(${p.id})">RELEASE</button></div></div>`}).join('')||'<div class="empty">No players match your filters.</div>';
+}
+function roModal(h){const o=$('roModal');if(o)o.remove();const d=document.createElement('div');d.className='modal';d.id='roModal';d.innerHTML='<div class="card">'+h+'</div>';d.addEventListener('click',ev=>{if(ev.target===d)d.remove()});document.body.appendChild(d)}
+function roSwap(id){
+ const p=state.roster.find(x=>x.id===id);if(!p)return;
+ const fl=state.roster.filter(x=>x.starter),isS=!!p.starter;
+ if(!isS&&p.inj)return toast(p.name+' is injured.');
+ if(!isS&&fl.length<5){p.starter=true;save();return toast(p.name+' is now a starter.')}
+ const pool=isS?state.roster.filter(x=>!x.starter&&!x.inj):fl;
+ if(!pool.length)return toast('No healthy bench player available.');
+ roModal(`<h2 style="margin-bottom:6px">${isS?'Who replaces '+esc(p.name)+'?':'Who does '+esc(p.name)+' replace?'}</h2><p class="sub" style="margin-bottom:14px">${isS?'Pick a healthy bench player to move into the starting five.':'Pick a starter to move to the bench.'}</p>`
+  +pool.sort((a,b)=>calc(b)-calc(a)).map(x=>`<button class="btn pick" onclick="roDoSwap(${isS?x.id:p.id},${isS?p.id:x.id})"><span><b>${esc(x.name)}</b> · ${x.pos} · age ${x.age}</span><span class="purple" style="font:800 18px 'Barlow Condensed'">${calc(x)}</span></button>`).join('')
+  +'<button class="btn" onclick="$(\'roModal\').remove()">CANCEL</button>');
+}
+function roDoSwap(inId,outId){const a=state.roster.find(x=>x.id===inId),b=state.roster.find(x=>x.id===outId);if(!a||!b)return;a.starter=true;b.starter=false;$('roModal').remove();save();toast(a.name+' starts, '+b.name+' to the bench.')}
+function roAuto(mode){
+ const h=state.roster.filter(p=>!p.inj),pick=[];
+ if(mode==='bal')POSORD.forEach(x=>{const b=h.filter(p=>p.pos===x).sort((a,b)=>calc(b)-calc(a))[0];if(b)pick.push(b)});
+ h.filter(p=>!pick.includes(p)).sort((a,b)=>calc(b)-calc(a)).forEach(p=>{if(pick.length<5)pick.push(p)});
+ state.roster.forEach(p=>p.starter=pick.includes(p));save();toast(mode==='bal'?'Balanced lineup set (best player at each position).':'Best five players set as starters.');
+}
+function roEdit(id){
+ const p=state.roster.find(x=>x.id===id);if(!p)return;
+ const sl=(i,l,v)=>`<div class="field"><label>${l} <b id="${i}v" style="color:var(--white)">${v}</b></label><input id="${i}" type="range" min="1" max="99" value="${v}" oninput="roPrev()"></div>`;
+ roModal(`<div class="section-head"><h2>Edit player</h2><span class="rating" id="ePrev">${calc(p)}</span></div>
+ <div class="form-grid"><div class="field"><label>NAME</label><input id="eN" maxlength="25" value="${esc(p.name)}"></div>
+ <div class="field"><label>POSITION</label><select id="eP">${positions.map(x=>`<option ${p.pos===x?'selected':''}>${x}</option>`).join('')}</select></div>
+ <div class="field"><label>AGE</label><input id="eA" type="number" min="18" max="45" value="${p.age}"></div>
+ <div class="field"><label>TRAINING FOCUS</label><select id="eF">${[['','None'],['off','Offense'],['def','Defense'],['three','3-point shooting'],['reb','Rebounding']].map(([k,l])=>`<option value="${k}" ${(p.focus||'')===k?'selected':''}>${l}</option>`).join('')}</select></div></div>
+ <p class="sub" style="margin:8px 0 0">A training focus gives that rating an extra boost at the next season rollover.</p>
+ <div class="form-grid" style="margin-top:14px">${sl('eO','OFFENSE',p.off)}${sl('eD','DEFENSE',p.def)}${sl('e3','3-POINT',p.three)}${sl('eR','REBOUNDING',p.reb)}</div>
+ <div class="row" style="margin-top:18px"><button class="btn primary" onclick="roSaveEdit(${p.id})">SAVE</button><button class="btn" onclick="$('roModal').remove()">CANCEL</button></div>`);
+}
+function roPrev(){const v=i=>clamp($(i).value);['eO','eD','e3','eR'].forEach(i=>$(i+'v').textContent=v(i));$('ePrev').textContent=calc({off:v('eO'),def:v('eD'),three:v('e3'),reb:v('eR')})}
+function roSaveEdit(id){
+ const p=state.roster.find(x=>x.id===id);if(!p)return;
+ p.name=$('eN').value.trim()||p.name;p.pos=$('eP').value;p.age=clamp($('eA').value,18,45);
+ p.off=clamp($('eO').value);p.def=clamp($('eD').value);p.three=clamp($('e3').value);p.reb=clamp($('eR').value);
+ const f=$('eF').value;if(f)p.focus=f;else delete p.focus;
+ p.ovr=calc(p);$('roModal').remove();save();toast('Player updated.');
+}
+function roExt(id){
+ const p=state.roster.find(x=>x.id===id);if(!p)return;
+ const ns=salOf(p),after=payroll(state.roster)-(p.sal||0)+ns;
+ if(after>CAP)return toast('Not enough cap space for a '+$m(ns)+' contract.');
+ ask('Extend '+p.name+' for 3 more years at '+$m(ns)+' per year?',()=>{p.sal=ns;p.yrs=(p.yrs||1)+3;save();toast(p.name+' extended.')});
+}
+function roRel(id){const p=state.roster.find(x=>x.id===id);if(!p)return;ask('Release '+p.name+'? This cannot be undone.',()=>removePlayer(id))}
+function saveRoster(){toast('Roster changes are saved automatically.')}
+function addPlayer(){
+ if(state.roster.length>=15)return toast('Maximum roster size is 15.');
+ if(state.current&&!state.current.done)return toast('Finish the current game first.');
+ const p=makeRookie();p.sal=Math.min(p.sal||1,2);p.yrs=2;state.roster.push(p);
+ save();toast('Rookie added. Fine-tune them below.');roEdit(p.id);
+}
+function removePlayer(id){
+ if(state.current&&!state.current.done)return toast('Finish the current game first.');
+ if(state.roster.length<=8)return toast('You need at least 8 players.');
+ state.roster=state.roster.filter(p=>p.id!==id);
+ if(starters().length<5)state.roster.forEach((p,i)=>p.starter=i<5);
+ save();toast('Player removed.');
+}
+function resetRoster(){
+ ask('Restore the default 15 players?',resetRoster2);
+}
+function resetRoster2(){
+ state.roster=state.teamKey?realRoster(state.teamKey):freshRoster();state.roster.forEach((p,i)=>p.id=i+1);state.pstats={};
+ state.nextId=16;save();toast('Roster restored.');
+}
+
+function saveSettings(){
+ state.team.name=$('teamNameInput').value.trim()||'YOUR TEAM';
+ state.team.abbr=$('teamAbbrInput').value.trim().toUpperCase()||'YTM';
+ state.team.city=$('teamCityInput').value.trim()||'HOME CITY';
+ state.team.color=$('teamColorInput').value;
+ state.settings.difficulty=$('difficulty').value;
+ state.settings.quarterLength=Number($('quarterLength').value);
+ document.documentElement.style.setProperty('--purple',state.team.color);
+ save();toast('Franchise settings saved.');
+}
+
+function startGame(quiet){
+ if(state.current&&!state.current.done)return toast('Finish your current game first.');
+ if(!nextG())return toast('Season complete. Start a new season.');
+ if($('roster').classList.contains('active'))saveRosterSilent();
+ const s=nextG();
+ state.current={
+  number:s.number,opponent:s.opponent,oppRating:s.rating,post:!!s.post,label:s.label||'REGULAR SEASON',isHome:s.home!==false,
+  q:0,home:0,away:0,quarters:[],done:false,log:[],
+  players:lineup().map(p=>({id:p.id,name:p.name,pos:p.pos,pts:0,reb:0,ast:0,stl:0,blk:0,fga:0,fgm:0,threeA:0,threeM:0,min:0}))
+ };
+ if(quiet===true)return;
+ save();toast('Tip-off! Game '+s.number+' started.');
+}
+function simGame(quiet){
+ if(!nextG()&&(!state.current||state.current.done))return toast('Season complete. Start a new season.');
+ if(!state.current||state.current.done)startGame(true);
+ let n=0;while(state.current&&!state.current.done&&n++<12)playQuarter(true);
+}
+function simGames(n){
+ const start=state.played;
+ let c=0;for(let i=0;i<n&&nextG();i++){simGame(true);c++}
+ save();toast('Simulated '+c+' game(s).'+(state.post?.champ?' Champion: '+nm(state.post.champ)+'!':state.played>=82?' Regular season complete!':''));
+}
+function saveRosterSilent(){
+ if(starters().length!==5)state.roster.forEach((p,i)=>p.starter=i<5);
+}
+function distribute(total,players,weights,key){
+ let result=players.map(()=>0);
+ weights=weights.map((w,i)=>players[i]&&players[i].inj?0:w);let sum=weights.reduce((a,b)=>a+b,0);
+ if(!players.length)return result;
+ for(let n=0;n<total;n++){
+  let r=Math.random()*sum;
+  for(let i=0;i<players.length;i++){
+   r-=weights[i];
+   if(r<=0){result[i]++;break;}
+  }
+ }
+ return result;
+}
+function playQuarter(quiet){
+ const g=state.current;
+ if(!g||g.done)return toast('Start a game first.');
+ if(g.q>=4)g.log.unshift({time:'OT',text:'Overtime period.'});
+ const q=g.q;
+ const teamPlayers=g.players.map(x=>state.roster.find(p=>p.id===x.id)||{...x,off:60,def:60,three:60,reb:60,ovr:60,starter:false});
+ const active=teamPlayers.map((p,i)=>({p,stat:g.players[i]}));
+ const ql=state.settings.quarterLength||12;
+ const ownOff=average(teamPlayers.map(p=>p.off));
+ const ownDef=average(teamPlayers.map(p=>p.def));
+ const own3=average(teamPlayers.map(p=>p.three));
+ const ownReb=average(teamPlayers.map(p=>p.reb));
+ const rating=teamRating();
+ let advantage=rating-g.oppRating;
+ let difficulty=state.settings.difficulty==='hard'?-5:state.settings.difficulty==='easy'?5:0;
+ const ha=g.isHome===false?-.9:.9;
+ let ownBase=27+(ownOff-75)*.10+(advantage*.12)+difficulty*.4+ha;
+ let oppBase=26+(g.oppRating-75)*.11-(ownDef-75)*.09-difficulty*.4-ha;
+ let homePts=clamp(rand(Math.round(ownBase-7),Math.round(ownBase+7)),0,55);
+ let awayPts=clamp(rand(Math.round(oppBase-7),Math.round(oppBase+7)),0,55);
+ homePts=Math.max(0,homePts);
+ awayPts=Math.max(0,awayPts);
+ if(own3>90&&Math.random()<.25)homePts+=3;
+ if(ownReb>90&&Math.random()<.2)homePts+=2;
+ g.home+=homePts;g.away+=awayPts;
+ g.quarters.push({home:homePts,away:awayPts});
+ g.q++;
+ const role=i=>i<5?1:i<10?.4:.03,weights=teamPlayers.map((p,i)=>Math.pow(Math.max(1,p.off*.65+p.three*.22+p.ovr*.13)/60,3)*role(i));
+ const pts=distribute(homePts,teamPlayers,weights);
+ const reb=distribute(rand(9,14),teamPlayers,teamPlayers.map((p,i)=>Math.pow(p.reb/60,2)*role(i)));
+ const ast=distribute(rand(5,9),teamPlayers,weights);
+ const stl=distribute(rand(1,4),teamPlayers,teamPlayers.map((p,i)=>p.def*role(i)));
+ const blk=distribute(rand(0,3),teamPlayers,teamPlayers.map((p,i)=>(p.def*.5+p.reb*.5)*role(i)));
+ active.forEach((a,i)=>{
+  let x=a.stat;
+  x.pts+=pts[i];x.reb+=reb[i];x.ast+=ast[i];x.stl+=stl[i];x.blk+=blk[i];
+  x.min+=a.p.inj?0:Math.round(ql*(i<5?.7:i<10?.3:.02)+rand(0,1));
+  const t=Math.min(Math.floor(pts[i]/3),rand(0,3));let ft=rand(0,Math.min(2,pts[i]-3*t));
+  if((pts[i]-3*t-ft)%2)ft++;
+  const two=(pts[i]-3*t-ft)/2,fgm=two+t;
+  x.fgm+=fgm;x.fga+=fgm+Math.round(fgm*1.1)+rand(0,1);x.threeM+=t;x.threeA+=t+Math.round(t*1.9)+rand(0,1);
+ });
+ const qName=['FIRST','SECOND','THIRD','FOURTH'][q]||'OVERTIME';
+ g.log.unshift({time:q<4?'Q'+(q+1):'OT',text:`End of the ${qName} quarter. ${state.team.name} ${homePts} points, ${g.opponent} ${awayPts} points. Score: ${g.home}–${g.away}.`});
+ if(g.q>=4&&g.home!==g.away)finishGame();
+ if(!quiet)save();
+}
+function finishGame(){
+ const g=state.current;g.done=true;
+ let ot=0;
+ while(g.home===g.away){ot++;const h=rand(6,14),a=rand(6,14);g.home+=h;g.away+=a;g.quarters.push({home:h,away:a});}
+ if(ot)g.log.unshift({time:'OT',text:'Tied after regulation. Overtime was needed to decide it.'});
+ const finalWin=g.home>g.away;
+ if(!g.post){
+ if(finalWin){state.wins++;state.streak=Math.max(0,state.streak)+1;}
+ else{state.losses++;state.streak=Math.min(0,state.streak)-1;}
+ state.played++;
+ state.pointsFor+=g.home;state.pointsAgainst+=g.away;
+ const schedule=state.schedule[g.number-1];
+ schedule.result={home:g.home,away:g.away,win:finalWin};
+ }
+ const box=g.players.map(p=>({...p}));
+ state.history.unshift({
+  number:g.number,opponent:g.opponent,home:g.home,away:g.away,win:finalWin,
+  quarters:g.quarters,players:box,post:!!g.post,label:g.label
+ });
+ if(!g.post)leagueTick();
+ g.log.unshift({time:'FINAL',text:`FINAL BUZZER. ${state.team.name} ${g.home}, ${g.opponent} ${g.away}. ${finalWin?'VICTORY!':'DEFEAT.'}`});
+ afterGame(g);
+ if(!g.post&&state.played===41)runAllStar();
+ if(g.post)postResult(finalWin);else if(state.played>=82)startPost();
+}
+function afterGame(g){
+ settleBets(g);
+ if(!g.post)g.players.forEach(x=>{const s=state.pstats[x.id]||(state.pstats[x.id]={gp:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tm:0,ta:0,min:0});if(x.min>0)s.gp++;['pts','reb','ast','stl','blk','fgm','fga','min'].forEach(k=>s[k]+=x[k]);s.tm+=x.threeM;s.ta+=x.threeA});
+ state.roster.forEach(p=>{
+  if(p.inj){p.inj--;if(!p.inj)g.log.unshift({time:'NEWS',text:p.name+' is cleared to return.'})}
+  else{const st=g.players.find(x=>x.id===p.id);
+   if(st&&st.min>0&&Math.random()<.012){p.inj=rand(2,18)+(Math.random()<.1?rand(15,40):0);g.log.unshift({time:'INJURY',text:p.name+' went down injured and will miss '+p.inj+' games.'})}}
+ });
+}
+function renderGame(){
+ const g=state.current;
+ const active=!!g;
+ $('startGame').disabled=active&&!g.done;
+ $('nextQuarter').disabled=!active||g.done;
+ if(!active){
+  $('gameStatus').textContent=(nextG()?.post?nextG().label:'REGULAR SEASON · GAME '+String(state.played+1).padStart(2,'0'));
+  $('homeName').textContent=state.team.name;$('awayName').textContent=nextG()?.opponent||'SEASON COMPLETE';
+  $('homeScore').textContent=0;$('awayScore').textContent=0;
+  $('quarterScores').innerHTML=['Q1','Q2','Q3','Q4','STATUS'].map(x=>`<div>${x}<strong>–</strong></div>`).join('');
+  $('quarterMessage').textContent='Prepare your lineup before tip-off.';
+  $('gameLog').innerHTML='<div class="empty">No game has started yet.</div>';
+  $('boxBody').innerHTML='<tr><td colspan="9" class="empty">Box score available after the game begins.</td></tr>';
+  $('gameHomeRating').textContent='OVR '+teamRating();
+  $('gameAwayRating').textContent='OVR '+(nextG()?.rating||'–');
+  return;
+ }
+ $('gameStatus').textContent=(g.done?'FINAL':'IN PROGRESS')+' · '+(g.post?g.label:'GAME '+String(g.number).padStart(2,'0'))+(g.isHome===false?' · ROAD GAME':' · HOME COURT');
+ $('homeName').textContent=state.team.name;$('awayName').textContent=g.opponent;
+ $('homeScore').textContent=g.home;$('awayScore').textContent=g.away;
+ $('quarterScores').innerHTML=['Q1','Q2','Q3','Q4'].map((x,i)=>`<div>${x}<strong>${g.quarters[i]?g.quarters[i].home+'–'+g.quarters[i].away:'–'}</strong></div>`).join('')+(g.quarters.length>4?`<div>OT<strong>${g.quarters.slice(4).reduce((a,q)=>a+q.home,0)+'–'+g.quarters.slice(4).reduce((a,q)=>a+q.away,0)}</strong></div>`:'')+`<div>STATUS<strong>${g.done?'FINAL':(g.q>4?'OT':'Q'+g.q)}</strong></div>`;
+ $('quarterMessage').textContent=g.done?'Game complete. Check the box score and season standings.':`Quarter ${g.q+1} is next. Press PLAY NEXT QUARTER to continue.`;
+ $('gameHomeRating').textContent='OVR '+teamRating();
+ $('gameAwayRating').textContent='OVR '+g.oppRating;
+ $('gameLog').innerHTML=g.log.map(e=>`<div class="log-entry"><span class="log-time">${e.time}</span><span>${esc(e.text)}</span></div>`).join('');
+ $('boxBody').innerHTML=g.players.map(p=>`<tr><td><b>${esc(p.name)}</b><div class="player-pos">${p.pos}</div></td><td class="green">${p.pts}</td><td>${p.reb}</td><td>${p.ast}</td><td>${p.stl}</td><td>${p.blk}</td><td>${p.fgm}/${p.fga}</td><td>${p.threeM}/${p.threeA}</td><td>${p.min}</td></tr>`).join('');
+ if(g.done)$('quarterMessage').textContent=`FINAL: ${g.home}–${g.away}. ${g.home>g.away?'You won!':'You lost.'}`;
+}
+function renderSchedule(){
+ $('scheduleList').innerHTML=state.schedule.slice(0,Math.max(12,state.played+4)).map(s=>{
+  const r=s.result;
+  return `<div class="schedule-row"><span class="muted">GAME ${String(s.number).padStart(2,'0')}</span><span><b>${esc(s.opponent)}</b><br><small class="muted">OVR ${s.rating}</small></span><span class="schedule-result ${r?(r.win?'winner-text':'loss-text'):''}">${r?r.home+'–'+r.away:'UPCOMING'}</span></div>`;
+ }).join('')+(state.played+4<82?'<div class="empty">More games will appear as you progress through the season.</div>':'');
+}
+function renderStandings(){
+ const all=[...state.standings,{name:state.team.name,w:state.wins,l:state.losses,isMe:true}].sort((a,b)=>(b.w/(b.w+b.l||1))-(a.w/(a.w+a.l||1)));
+ $('standingsBody').innerHTML=all.map((t,i)=>`<tr class="clickrow ${t.isMe?'hl':''}" data-t="${esc(t.name)}" onclick="viewTeam(this.dataset.t)"><td>${i+1}</td><td><b>${esc(t.name)}</b></td><td>${t.w}</td><td>${t.l}</td><td>${(t.w/(t.w+t.l||1)).toFixed(3)}</td><td>${t.isMe?teamRating():(state.strengths[t.name]||'–')}</td></tr>`).join('');
+}
+function renderHistory(){
+ $('historyList').innerHTML=state.history.length?state.history.map(g=>`<div class="schedule-row clickrow" onclick="showBox(${g.number})" title="Click for box score"><span>${g.post?'PO':'GAME '+g.number}</span><span><b>${esc(state.team.name)} vs ${esc(g.opponent)}</b><br><small class="muted">${g.win?'WIN':'LOSS'}</small></span><span class="schedule-result ${g.win?'winner-text':'loss-text'}">${g.home}–${g.away}</span></div>`).join(''):'<div class="empty">No completed games yet.</div>';
+}
+function showBox(n){
+ const g=state.history.find(h=>h.number===n);if(!g)return;
+ if(state.current&&!state.current.done)return toast('Finish your current game first.');
+ state.current={...g,oppRating:state.schedule[n-1]?.rating||75,q:g.quarters.length,done:true,log:[{time:'FINAL',text:'Archived game.'}],players:g.players};
+ navigate('game');
+}
+function devRoster(roster){
+ const ch=[],ret=[],rook=[];
+ roster.forEach(p=>{
+  const a=p.age,d=a<=21?rand(2,5):a<=24?rand(1,3):a<=28?rand(-1,1):a<=31?rand(-2,0):rand(-4,-1),old=calc(p);
+  p.off=clamp(p.off+d+rand(-2,2));p.def=clamp(p.def+d+(a>30?-1:0)+rand(-2,2));p.three=clamp(p.three+d+(a<27?1:0)+rand(-2,2));p.reb=clamp(p.reb+d+(a>30?-1:0)+rand(-2,2));
+  if(p.focus)p[p.focus]=clamp(p[p.focus]+rand(1,3));p.age++;p.ovr=calc(p);p.inj=0;p.yrs=(p.yrs||1)-1;if(p.yrs<=0){p.sal=salOf(p);p.yrs=rand(1,4)}ch.push({name:p.name,age:p.age,from:old,to:p.ovr});
+ });
+ let keep=roster.filter(p=>{const out=p.age>=36||(p.age>=33&&p.ovr<60&&Math.random()<.5);if(out)ret.push(p.name+' ('+p.pos+', age '+p.age+')');return !out});
+ while(keep.length<15){const r=mkP(state.nextId++,positions[rand(0,4)],rand(52,68),rand(19,22),keep.map(x=>x.name),false);r.sal=Math.min(r.sal,6);r.yrs=3;keep.push(r);rook.push(r.name+' ('+r.pos+', '+r.ovr+' OVR, age '+r.age+')')}
+ return {r:keep,ch:ch.filter(c=>keep.some(p=>p.name===c.name)).sort((a,b)=>(b.to-b.from)-(a.to-a.from)),ret,rook};
+}
+function progress(){
+ const o=devRoster(state.roster);state.roster=o.r;state.offseason={season:state.season,ch:o.ch,ret:o.ret,rook:o.rook};
+ Object.keys(state.league||{}).forEach(n=>{state.league[n].roster=devRoster(state.league[n].roster).r});
+ state.fa=genFA();
+}
+const TR={team:'',mine:'',theirs:''};
+const $m=v=>'$'+Number(v).toFixed(1)+'M';
+function payroll(r){return r.reduce((a,p)=>a+(p.sal||0),0)}
+function val(p){return Math.pow(Math.max(0,calc(p)-40),2)*(p.age<=24?1.15:p.age>=32?.75:1)}
+function tbl(h,rows){return '<div class="table-wrap"><table><thead><tr>'+h.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+rows+'</tbody></table></div>'}
+function pRow(p,btn){return `<tr><td><b>${esc(p.name)}</b></td><td>${p.pos}</td><td>${p.age}</td><td class="purple">${calc(p)}</td><td>${$m(p.sal||0)}</td><td>${p.yrs||1} yr</td><td>${btn||''}</td></tr>`}
+function genFA(){const used=[];return Array.from({length:12},()=>{const p=mkP(state.nextId++,positions[rand(0,4)],rand(50,74),rand(24,35),used,false);used.push(p.name);p.yrs=rand(1,3);return p}).sort((a,b)=>calc(b)-calc(a))}
+function pickTeam(n){
+ const i=leagueTeams.indexOf(n);
+ state=initialState();state.picked=true;state.teamKey=n;
+ state.team={name:n,abbr:n.split(' ').slice(-1)[0].slice(0,3).toUpperCase(),city:n.replace(/ (Trail Blazers|\S+)$/,''),color:PAL[i%PAL.length]};
+ state.roster=realRoster(n);state.roster.forEach((p,i)=>p.id=i+1);state.nextId=16;state.league={};
+ leagueTeams.forEach(t=>{if(t!==n){const r=realRoster(t);r.forEach(p=>p.id=state.nextId++);state.league[t]={roster:r}}});
+ state.fa=genFA();state.pstats={};state.seasons=[];state.view=null;
+ generateSchedule();resetStandings();
+ document.documentElement.style.setProperty('--purple',state.team.color);
+ const pk=$('picker');if(pk)pk.remove();
+ save();navigate('dashboard');toast('Welcome to the '+n+'!');
+}
+function showPicker(){
+ if($('picker'))return;
+ const d=document.createElement('div');d.id='picker';d.style.cssText='position:fixed;inset:0;background:var(--bg);z-index:200;overflow:auto;padding:24px';
+ d.innerHTML='<div style="max-width:1000px;margin:auto"><div class="topline">New franchise</div><h1>Choose your <span>team.</span></h1><p class="sub">Pick one of the 30 NBA franchises. Contenders are easier to win with; rebuilding teams are a challenge. Rosters use 2026–27 projected starters and key additions; bench depth is generated, and ratings and salaries are estimates.</p><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin-top:20px">'+[...leagueTeams].sort((a,b)=>BASE[b]-BASE[a]).map(n=>'<button class="card btn" style="text-align:left" data-t="'+n+'" onclick="pickTeam(this.dataset.t)"><b>'+n+'</b><br><small class="muted">OVR ~'+BASE[n]+' · '+(BASE[n]>=78?'CONTENDER':BASE[n]>=72?'PLAYOFF TEAM':'REBUILDING')+'</small></button>').join('')+'</div></div>';
+ document.body.appendChild(d);
+}
+function viewTeam(n){state.view=state.view===n?null:n;renderTeamView()}
+function renderTeamView(){
+ const el=$('teamView');if(!el)return;const n=state.view;
+ const r=n?(n===state.team.name?state.roster:state.league?.[n]?.roster):null;
+ if(!r){el.innerHTML='';return}
+ el.innerHTML='<div class="card" style="margin-bottom:15px"><div class="section-head"><h2>'+esc(n)+'</h2><span class="pill">OVR '+ovrOf(r)+' · PAYROLL '+$m(payroll(r))+'</span></div>'+tbl(['PLAYER','POS','AGE','OVR','OFF','DEF','3PT','REB','SALARY'],[...r].sort((a,b)=>calc(b)-calc(a)).map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${p.pos}</td><td>${p.age}</td><td class="purple">${calc(p)}</td><td>${p.off}</td><td>${p.def}</td><td>${p.three}</td><td>${p.reb}</td><td>${$m(p.sal||0)}</td></tr>`).join(''))+'</div>';
+}
+function renderFront(){
+ const el=$('frontBody');if(!el||!state.picked)return;
+ const pay=payroll(state.roster),room=CAP-pay,t=state.league?.[TR.team];
+ const opts=(arr,sel,f)=>arr.map(x=>{const o=f(x);return `<option value="${esc(o[0])}" ${String(o[0])===String(sel)?'selected':''}>${esc(o[1])}</option>`}).join('');
+ const ph='<option value="">Choose...</option>',lab=p=>[p.id,p.name+' · '+calc(p)+' OVR · '+$m(p.sal||0)];
+ el.innerHTML=`<div class="section grid stats-grid"><div class="card metric"><small>PAYROLL</small><strong>${$m(pay)}</strong></div><div class="card metric"><small>SALARY CAP</small><strong>${$m(CAP)}</strong></div><div class="card metric"><small>CAP SPACE</small><strong class="${room<0?'red':'green'}">${$m(room)}</strong></div><div class="card metric"><small>ROSTER</small><strong>${state.roster.length}/15</strong></div></div>`
+ +'<div class="section card"><div class="section-head"><h2>Contracts</h2></div>'+tbl(['PLAYER','POS','AGE','OVR','SALARY','CONTRACT',''],state.roster.map(p=>pRow(p,`<button class="btn danger sm" onclick="removePlayer(${p.id})">RELEASE</button>`)).join(''))+'</div>'
+ +'<div class="section card"><div class="section-head"><h2>Free agents</h2><span class="sub">Needs cap space and an open roster spot</span></div>'+tbl(['PLAYER','POS','AGE','OVR','ASKING','CONTRACT',''],state.fa.map((p,i)=>pRow(p,`<button class="btn primary sm" onclick="doSign(${i})">SIGN</button>`)).join(''))+'</div>'
+ +`<div class="section card"><div class="section-head"><h2>Trade desk</h2><span class="sub">AI teams accept offers that give them fair or better value</span></div><div class="form-grid"><div class="field"><label>YOUR PLAYER</label><select onchange="TR.mine=this.value">${ph+opts(state.roster,TR.mine,lab)}</select></div><div class="field"><label>TEAM</label><select onchange="TR.team=this.value;TR.theirs='';renderFront()">${ph+opts(Object.keys(state.league||{}),TR.team,n=>[n,n])}</select></div><div class="field"><label>THEIR PLAYER</label><select onchange="TR.theirs=this.value">${ph+(t?opts(t.roster,TR.theirs,lab):'')}</select></div></div><button class="btn primary" style="margin-top:17px" onclick="doTrade()">PROPOSE TRADE</button></div>`;
+}
+function doSign(i){
+ const p=state.fa[i];if(!p)return;
+ if(state.current&&!state.current.done)return toast('Finish the current game first.');
+ if(state.roster.length>=15)return toast('Roster is full. Release a player first.');
+ if(payroll(state.roster)+p.sal>CAP)return toast('Not enough cap space.');
+ state.fa.splice(i,1);state.roster.push({...p,id:state.nextId++,starter:false});save();toast(p.name+' signed.');
+}
+function doTrade(){
+ if(state.current&&!state.current.done)return toast('Finish the current game first.');
+ const t=state.league?.[TR.team];if(!t)return toast('Choose a team.');
+ const mi=state.roster.findIndex(p=>String(p.id)===TR.mine),ti=t.roster.findIndex(p=>String(p.id)===TR.theirs);
+ if(mi<0||ti<0)return toast('Pick a player from each side.');
+ const m=state.roster[mi],th=t.roster[ti];
+ if(payroll(state.roster)-m.sal+th.sal>CAP&&th.sal>m.sal)return toast('That trade puts you over the salary cap.');
+ if(val(m)<val(th)*1.1)return toast(TR.team+' rejected the offer.');
+ state.roster[mi]={...th,id:state.nextId++,starter:m.starter};t.roster[ti]={...m,id:state.nextId++,starter:false};
+ state.strengths[TR.team]=ovrOf(t.roster);
+ state.schedule.forEach(s=>{if(!s.result&&s.opponent===TR.team)s.rating=state.strengths[TR.team]});
+ TR.mine=TR.theirs='';save();toast('Trade completed!');
+}
+Object.assign(BASE,{'Oklahoma City Thunder':82,'New York Knicks':81,'Philadelphia 76ers':80,'San Antonio Spurs':79,'Denver Nuggets':79,'Boston Celtics':78,'Minnesota Timberwolves':77,'Miami Heat':77,'Los Angeles Lakers':77,'Cleveland Cavaliers':76,'Houston Rockets':76,'Detroit Pistons':75,'Orlando Magic':74,'Golden State Warriors':73,'Atlanta Hawks':73,'Portland Trail Blazers':72,'Dallas Mavericks':72,'Toronto Raptors':71,'Indiana Pacers':71,'Milwaukee Bucks':70,'Charlotte Hornets':70,'Phoenix Suns':68,'Memphis Grizzlies':67,'Sacramento Kings':67,'Chicago Bulls':67,'New Orleans Pelicans':66,'Utah Jazz':65,'Brooklyn Nets':64,'Washington Wizards':64,'LA Clippers':62});
+const R={'Atlanta Hawks':'CJ McCollum,Nickeil Alexander-Walker,Dyson Daniels,Jalen Johnson,Onyeka Okongwu|Lu Dort,Aaron Wiggins,Devin Carter','Boston Celtics':'Payton Pritchard,Derrick White,Paul George,Jayson Tatum,Mitchell Robinson|Mike Conley','Brooklyn Nets':'Mikel Brown Jr.,Egor Demin,Michael Porter Jr.,Julius Randle,Day\'Ron Sharpe|Keon Ellis,Moritz Wagner','Charlotte Hornets':'Coby White,Kon Knueppel,Brandon Miller,Naz Reid,Moussa Diabaté|Grayson Allen','Chicago Bulls':'Josh Giddey,Norman Powell,Matas Buzelis,Caleb Wilson,Nic Claxton|','Cleveland Cavaliers':'James Harden,Donovan Mitchell,Peyton Watson,Evan Mobley,Jarrett Allen|Cam Whitmore','Detroit Pistons':'Cade Cunningham,Ausar Thompson,Duncan Robinson,John Collins,Jalen Duren|Isaiah Joe,Taurean Prince','Indiana Pacers':'Tyrese Haliburton,Andrew Nembhard,Aaron Nesmith,Pascal Siakam,Ivica Zubac|Kelly Oubre Jr.,Larry Nance Jr.','Miami Heat':'Davion Mitchell,Tim Hardaway Jr.,Andrew Wiggins,Giannis Antetokounmpo,Bam Adebayo|Klay Thompson','Milwaukee Bucks':'Ryan Rollins,Tyler Herro,Jaime Jaquez Jr.,Kyle Kuzma,Myles Turner|Kel\'el Ware','New York Knicks':'Jalen Brunson,Josh Hart,Mikal Bridges,OG Anunoby,Karl-Anthony Towns|Andre Drummond','Orlando Magic':'Jalen Suggs,Desmond Bane,Franz Wagner,Paolo Banchero,Wendell Carter Jr.|Nikola Vučević','Philadelphia 76ers':'Tyrese Maxey,VJ Edgecombe,Jaylen Brown,LeBron James,Joel Embiid|Kentavious Caldwell-Pope','Toronto Raptors':'Immanuel Quickley,RJ Barrett,Kawhi Leonard,Scottie Barnes,Jakob Poeltl|Kyle Anderson','Washington Wizards':'Trae Young,Kyshawn George,AJ Dybantsa,Anthony Davis,Alex Sarr|Deandre Ayton,Tre Mann,Khris Middleton','Dallas Mavericks':'Kyrie Irving,Max Christie,Cooper Flagg,PJ Washington,Dereck Lively II|Zaccharie Risacher,Santi Aldama,Marcus Sasser','Denver Nuggets':'Jamal Murray,Christian Braun,Cameron Johnson,Aaron Gordon,Nikola Jokić|DeMar DeRozan,Marvin Bagley III','Golden State Warriors':'Stephen Curry,Brandin Podziemski,Yaxel Lendeborg,Draymond Green,Kristaps Porziņģis|Georges Niang,Brandon Williams','Houston Rockets':'Fred VanVleet,Amen Thompson,Kevin Durant,Jabari Smith Jr.,Alperen Şengün|Bogdan Bogdanović,Marcus Smart','LA Clippers':'Darius Garland,Bradley Beal,Brandon Ingram,Rui Hachimura,Brook Lopez|Max Strus,Johni Broome,Gradey Dick','Los Angeles Lakers':'Luka Dončić,Austin Reaves,Quentin Grimes,Sandro Mamukelashvili,Walker Kessler|Collin Sexton','Memphis Grizzlies':'Ty Jerome,Jaylen Wells,Cedric Coward,Cameron Boozer,Zach Edey|Jerami Grant,Isaiah Stewart,D\'Angelo Russell','Minnesota Timberwolves':'LaMelo Ball,Anthony Edwards,Ayo Dosunmu,Jaden McDaniels,Rudy Gobert|Josh Green','New Orleans Pelicans':'Dejounte Murray,Trey Murphy III,Herb Jones,Zion Williamson,Derik Queen|Trendon Watford','Oklahoma City Thunder':'Shai Gilgeous-Alexander,Cason Wallace,Jalen Williams,Chet Holmgren,Isaiah Hartenstein|','Phoenix Suns':'Devin Booker,Jalen Green,Dillon Brooks,Miles Bridges,Mark Williams|Luke Kennard','Portland Trail Blazers':'Ja Morant,Damian Lillard,Toumani Camara,Deni Avdija,Donovan Clingan|Jeremy Sochan','Sacramento Kings':'Darius Acuff Jr.,Zach LaVine,De\'Andre Hunter,Keegan Murray,Domantas Sabonis|','San Antonio Spurs':'De\'Aaron Fox,Stephon Castle,Devin Vassell,Julian Champagnie,Victor Wembanyama|Tobias Harris','Utah Jazz':'Keyonte George,Darryn Peterson,Lauri Markkanen,Jaren Jackson Jr.,Jusuf Nurkić|Jaxson Hayes,Josh Okogie'};
+const STAR={'Nikola Jokić':[97,31],'Shai Gilgeous-Alexander':[96,28],'Giannis Antetokounmpo':[94,31],'Luka Dončić':[94,27],'Victor Wembanyama':[93,22],'Jayson Tatum':[91,28],'Anthony Edwards':[91,25],'Jalen Brunson':[90,30],'Joel Embiid':[89,32],'Donovan Mitchell':[89,30],'Cade Cunningham':[89,25],'Stephen Curry':[88,38],'Kevin Durant':[88,38],'Tyrese Maxey':[88,26],'Devin Booker':[88,30],'Tyrese Haliburton':[88,26],'LeBron James':[87,41],'Jaylen Brown':[87,30],'Karl-Anthony Towns':[87,30],'Ja Morant':[87,27],'Kawhi Leonard':[86,35],'LaMelo Ball':[86,25],'Paolo Banchero':[86,24],'Bam Adebayo':[86,29],'Kyrie Irving':[86,34],'Domantas Sabonis':[86,30],'Jalen Johnson':[86,24],'Jalen Williams':[86,25],'Anthony Davis':[85,33],'Trae Young':[85,28],'De\'Aaron Fox':[85,28],'Damian Lillard':[85,36],'Chet Holmgren':[85,24],'Jamal Murray':[85,29],'Lauri Markkanen':[85,29],'Evan Mobley':[85,25],'James Harden':[84,37],'Scottie Barnes':[84,25],'Alperen Şengün':[84,24],'Franz Wagner':[83,25],'Cooper Flagg':[82,19],'Paul George':[82,36],'Brandon Ingram':[82,29],'Desmond Bane':[82,28],'Zion Williamson':[82,26],'Amen Thompson':[82,23],'OG Anunoby':[82,29],'Derrick White':[82,32],'Pascal Siakam':[82,32],'Rudy Gobert':[82,34],'Austin Reaves':[82,28],'Jaren Jackson Jr.':[82,27],'Mikal Bridges':[81,30],'Aaron Gordon':[80,31],'Brandon Miller':[80,24],'Tyler Herro':[80,26],'Julius Randle':[80,31],'Michael Porter Jr.':[80,28],'Deni Avdija':[80,25],'Jarrett Allen':[80,28],'Stephon Castle':[80,22],'Kristaps Porziņģis':[80,31],'Bradley Beal':[75,33],'Brook Lopez':[74,38],'Klay Thompson':[74,36],'Draymond Green':[74,36],'AJ Dybantsa':[72,19],'Cameron Boozer':[72,19],'Darryn Peterson':[72,20],'Caleb Wilson':[70,19],'Darius Acuff Jr.':[68,19],'Mikel Brown Jr.':[67,20],'VJ Edgecombe':[76,21],'Kon Knueppel':[75,21],'Alex Sarr':[75,21],'Dereck Lively II':[77,22],'Donovan Clingan':[77,22],'Jalen Duren':[79,22]};
+function wsum(pos){const m=PROF[pos];return m[0]*.35+m[1]*.25+m[2]*.2+m[3]*.2}
+function bP(name,pos,ovr,age){const b=ovr-wsum(pos),a=i=>clamp(Math.round(b+PROF[pos][i]+rand(-3,3)),25,99);const p={id:0,name,pos,age,off:a(0),def:a(1),three:a(2),reb:a(3),starter:false,ovr:0};p.ovr=calc(p);p.sal=salOf(p);p.yrs=rand(1,4);return p}
+function realRoster(t){
+ const sp=R[t].split('|'),tb=BASE[t],ps=['PG','SG','SF','PF','C'],list=[],used=[];
+ sp[0].split(',').forEach((n,i)=>{const s=STAR[n],p=bP(n,ps[i],s?s[0]:tb+[5,3,0,-2,-4][i]+rand(-1,1),s?s[1]:rand(22,31));p.starter=true;list.push(p);used.push(n)});
+ (sp[1]||'').split(',').forEach((n,i)=>{if(!n||used.includes(n))return;const s=STAR[n];list.push(bP(n,ps[rand(0,4)],s?s[0]:tb-7-i*2+rand(-2,2),s?s[1]:rand(24,33)));used.push(n)});
+ while(list.length<15){const k=list.length,p=bP(makeName(used),ps[k%5],tb-14-(k-8)*1.5+rand(-2,2),rand(20,32));used.push(p.name);list.push(p)}
+ return list;
+}
+const FO={tab:'trade'};
+function tg(arr,sel,who){
+ return [...arr].sort((x,y)=>calc(y)-calc(x)).map(p=>{const on=sel.includes(String(p.id));
+  return `<label class="trp ${on?'on':''}"><input type="checkbox" ${on?'checked':''} onchange="tgl('${who}','${p.id}')"><span class="trn"><b>${esc(p.name)}</b><small>${p.pos} · ${p.age}y · ${$m(p.sal||0)} · ${p.yrs||1}yr${p.inj?' · OUT':''}${p.starter&&who==='mine'?' · STARTER':''}</small></span><span class="rating" style="color:${rCol(calc(p))}">${calc(p)}</span></label>`}).join('')}
+function tgl(w,id){const a=TR[w],i=a.indexOf(id);if(i<0)a.push(id);else a.splice(i,1);renderFront()}
+function tradeEval(){
+ const t=state.league?.[TR.team],sum=(a,f)=>a.reduce((x,p)=>x+f(p),0);
+ const M=state.roster.filter(p=>TR.mine.includes(String(p.id))),T=t?t.roster.filter(p=>TR.theirs.includes(String(p.id))):[];
+ const vm=sum(M,val),vt=sum(T,val),need=vt*1.1,sm=sum(M,p=>p.sal||0),sT=sum(T,p=>p.sal||0);
+ const a=state.roster.length-M.length+T.length,b=t?t.roster.length-T.length+M.length:0,payAfter=payroll(state.roster)-sm+sT;
+ const capBad=payAfter>CAP&&sT>sm,rosterBad=!!t&&(a>15||a<8||b<8);
+ return{t,M,T,vm,vt,need,sm,sT,a,b,payAfter,capBad,rosterBad,ok:!!(M.length&&T.length&&vm>=need&&!capBad&&!rosterBad)}
+}
+function counter(E){
+ const rest=state.roster.filter(p=>!E.M.includes(p)).sort((x,y)=>val(x)-val(y)),one=rest.find(p=>E.vm+val(p)>=E.need);let add=one?[one]:[];
+ if(!one){let v=E.vm;for(const p of [...rest].reverse()){if(v>=E.need)break;add.push(p);v+=val(p)}
+  if(v<E.need)return null;
+  for(const p of [...add].sort((x,y)=>val(x)-val(y)))if(v-val(p)>=E.need){v-=val(p);add=add.filter(x=>x!==p)}}
+ return E.a-add.length>=8?add:null}
+function tradeAuto(){
+ const E=tradeEval();if(!E.t||!E.T.length)return toast('Pick a team and the players you want first.');
+ if(E.vm>=E.need)return toast('That offer already works.');
+ const c=counter(E);if(!c)return toast('Nothing on your roster closes the gap. Ask for less.');
+ c.forEach(p=>TR.mine.push(String(p.id)));toast('Added '+c.map(p=>p.name).join(', ')+' to balance the deal.');renderFront();
+}
+function tradeClear(){TR.mine=[];TR.theirs=[];renderFront()}
+function renderFront(){
+ const el=$('frontBody');if(!el||!state.picked||!$('front').classList.contains('active'))return;
+ if(!Array.isArray(TR.mine))TR.mine=[];if(!Array.isArray(TR.theirs))TR.theirs=[];
+ const keep={};el.querySelectorAll('[data-sc]').forEach(n=>keep[n.dataset.sc]=n.scrollTop);
+ const pay=payroll(state.roster),room=CAP-pay,tab=FO.tab;
+ const tb=(k,l)=>`<button class="btn sm ${tab===k?'primary':''}" onclick="FO.tab='${k}';renderFront()">${l}</button>`;
+ let body='';
+ if(tab==='contracts')body='<div class="section card"><div class="section-head"><h2>Contracts</h2><span class="sub">Release frees cap space</span></div>'+tbl(['PLAYER','POS','AGE','OVR','SALARY','CONTRACT',''],state.roster.map(p=>pRow(p,`<button class="btn danger sm" onclick="removePlayer(${p.id})">RELEASE</button>`)).join(''))+'</div>';
+ else if(tab==='fa')body='<div class="section card"><div class="section-head"><h2>Free agents</h2><span class="sub">Needs cap space and an open roster spot</span></div>'+tbl(['PLAYER','POS','AGE','OVR','ASKING','CONTRACT',''],state.fa.map((p,i)=>pRow(p,`<button class="btn primary sm" onclick="doSign(${i})">SIGN</button>`)).join(''))+'</div>';
+ else{
+  const E=tradeEval(),teams=Object.keys(state.league||{}).sort((x,y)=>ovrOf(state.league[y].roster)-ovrOf(state.league[x].roster));
+  const tOpts='<option value="">Choose a team...</option>'+teams.map(n=>`<option value="${esc(n)}" ${n===TR.team?'selected':''}>${esc(n)} · OVR ${ovrOf(state.league[n].roster)}</option>`).join('');
+  const ratio=E.T.length?Math.min(1,E.vm/E.need):0,col=ratio>=1?'var(--green)':ratio>.7?'#f59e0b':'var(--red)';
+  const warn=[];if(E.capBad)warn.push('Over the salary cap after this trade');if(E.rosterBad)warn.push('Your roster must stay between 8 and 15 players (would be '+E.a+')'+(E.b<8?'; they need at least 8':''));
+  const verdict=!E.t?'Choose a trading partner.':!E.T.length?'Pick the players you want to receive.':!E.M.length?'Offer something in return.':E.vm>=E.need?'<span class="green">They are likely to accept.</span>':`<span class="red">They would decline.</span> <span class="sub">Short by ${Math.round((1-E.vm/E.need)*100)}% of value.</span>`;
+  const log=(state.tradeLog||[]).slice(0,6);
+  body=`<div class="section card"><div class="section-head"><h2>Trade desk</h2><span class="sub">AI teams accept offers worth 10%+ more than they give up and cut extras to stay at 15</span></div>
+  <div class="row" style="margin-bottom:14px"><div class="field" style="min-width:240px;flex:1;max-width:360px"><select onchange="TR.team=this.value;TR.theirs=[];renderFront()">${tOpts}</select></div>${E.t?`<span class="pill">PAYROLL ${$m(payroll(E.t.roster))}</span>`:''}</div>
+  <div class="form-grid"><div><label>YOU SEND (${E.M.length})</label><div class="trl" data-sc="m">${tg(state.roster,TR.mine,'mine')}</div></div>
+  <div><label>YOU RECEIVE (${E.T.length})</label><div class="trl" data-sc="t">${E.t?tg(E.t.roster,TR.theirs,'theirs'):'<div class="empty">Pick a team first.</div>'}</div></div></div>
+  <div class="trsum"><div><small>SENDING</small><b>${E.M.length} · ${$m(E.sm)}</b></div><div><small>RECEIVING</small><b>${E.T.length} · ${$m(E.sT)}</b></div><div><small>YOUR PAYROLL AFTER</small><b class="${E.payAfter>CAP?'red':''}">${$m(E.payAfter)}</b></div><div><small>YOUR ROSTER AFTER</small><b>${E.t?E.a+' / 15':'–'}</b></div></div>
+  <div class="between" style="margin-top:12px"><small class="muted">TRADE VALUE: THEIR ASK</small><small class="muted">${E.T.length?Math.round(ratio*100)+'% OF ASK':''}</small></div><div class="progress"><i style="width:${ratio*100}%;background:${col}"></i></div>
+  <p class="sub" style="margin:10px 0 0">${verdict}${warn.map(w=>`<br><span style="color:#f59e0b">⚠ ${w}</span>`).join('')}</p>
+  <div class="row" style="margin-top:12px"><button class="btn primary" onclick="doTrade()">PROPOSE TRADE</button><button class="btn" onclick="tradeAuto()">WHAT WOULD IT TAKE?</button><button class="btn" onclick="tradeClear()">CLEAR</button></div></div>`
+  +(log.length?`<div class="section card"><h3>Recent trades</h3>${log.map(x=>`<div class="sub" style="padding:6px 0;border-top:1px solid var(--border)">S${x.s} · <b>${esc(x.team)}</b>: sent ${esc(x.sent.join(', '))} · got ${esc(x.got.join(', '))}</div>`).join('')}</div>`:'');
+ }
+ el.innerHTML=`<div class="fostrip"><span class="chip">PAYROLL <b>${$m(pay)}</b></span><span class="chip">CAP <b>${$m(CAP)}</b></span><span class="chip">SPACE <b class="${room<0?'red':'green'}">${$m(room)}</b></span><span class="chip">ROSTER <b>${state.roster.length}/15</b></span></div><div class="tabs">${tb('trade','TRADE DESK')}${tb('contracts','CONTRACTS')}${tb('fa','FREE AGENTS ('+state.fa.length+')')}</div>`+body;
+ el.querySelectorAll('[data-sc]').forEach(n=>{if(keep[n.dataset.sc]!=null)n.scrollTop=keep[n.dataset.sc]});
+}
+function doTrade(){
+ if(state.current&&!state.current.done)return toast('Finish the current game first.');
+ const E=tradeEval();if(!E.t)return toast('Choose a team.');
+ if(!E.M.length||!E.T.length)return toast('Pick at least one player on each side.');
+ if(E.rosterBad)return toast('Your roster must stay between 8 and 15 players.');
+ if(E.capBad)return toast('That trade puts you over the salary cap.');
+ if(E.vm<E.need){const c=counter(E);
+  if(c)return ask(TR.team+' declined, but would do it if you add '+c.map(p=>p.name+' ('+calc(p)+' OVR, '+$m(p.sal||0)+')').join(' and ')+'. Add to the offer?',()=>{c.forEach(p=>TR.mine.push(String(p.id)));renderFront()});
+  return toast(TR.team+' rejected the offer.')}
+ const k=E.M.filter(p=>p.starter).length,t=E.t;
+ const inc=E.T.map(p=>({...p,id:state.nextId++,starter:false})).sort((x,y)=>calc(y)-calc(x));inc.slice(0,k).forEach(p=>p.starter=true);
+ state.roster=[...state.roster.filter(p=>!E.M.includes(p)),...inc];
+ t.roster=[...t.roster.filter(p=>!E.T.includes(p)),...E.M.map(p=>({...p,id:state.nextId++,starter:false}))];
+ while(t.roster.length>15){let w=0;t.roster.forEach((p,i)=>{if(val(p)<val(t.roster[w]))w=i});t.roster.splice(w,1)}
+ state.strengths[TR.team]=ovrOf(t.roster);
+ state.schedule.forEach(g=>{if(!g.result&&g.opponent===TR.team)g.rating=state.strengths[TR.team]});
+ state.tradeLog=state.tradeLog||[];state.tradeLog.unshift({s:state.season,team:TR.team,sent:E.M.map(p=>p.name),got:E.T.map(p=>p.name)});state.tradeLog=state.tradeLog.slice(0,10);
+ TR.mine=[];TR.theirs=[];save();toast('Trade completed!');
+}
+function ask(msg,fn){
+ const d=document.createElement('div');
+ d.style.cssText='position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:100;padding:20px';
+ d.innerHTML='<div class="card" style="max-width:380px"><p style="margin:0 0 16px;font-size:13px;line-height:1.6">'+esc(msg)+'</p><div class="row"><button class="btn success" id="askY">CONFIRM</button><button class="btn" id="askN">CANCEL</button></div></div>';
+ document.body.appendChild(d);
+ d.querySelector('#askN').onclick=()=>d.remove();
+ d.querySelector('#askY').onclick=()=>{d.remove();fn()};
+ d.querySelector('#askY').focus();
+}
+/* ================= CONFERENCES · LEAGUE STATS · ALL-STAR ================= */
+const EAST=['Boston Celtics','Brooklyn Nets','New York Knicks','Philadelphia 76ers','Toronto Raptors','Chicago Bulls','Cleveland Cavaliers','Detroit Pistons','Indiana Pacers','Milwaukee Bucks','Atlanta Hawks','Charlotte Hornets','Miami Heat','Orlando Magic','Washington Wizards'];
+const CN={E:'East',W:'West'};
+const confOf=k=>EAST.includes(k==='*'?state.teamKey:k)?'E':'W';
+const tabbr=k=>k==='*'?(state.team.abbr||'YOU'):String(k).split(' ').slice(-1)[0].slice(0,3).toUpperCase();
+const sn=k=>k==='*'?(state.team.abbr||'YOU'):String(k).split(' ').slice(-1)[0];
+const nz=()=>(Math.random()+Math.random()+Math.random()+Math.random()-2)*1.73;
+const MINB=[35,33,31,29,27,22,18,14,10,6,3,2,1,1,1];
+const newT=()=>({gp:0,pf:0,pa:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tm:0,ta:0});
+const newS=()=>({gp:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tm:0,ta:0,min:0});
+
+// One simulated game for an AI team: team score + a box score for every player.
+function teamGame(k,win){
+ const R=state.league&&state.league[k]&&state.league[k].roster;if(!R||!R.length)return;
+ const s=state.strengths[k]||75,mg=rand(1,16);
+ let pf=clamp(Math.round(112+(s-75)*.3+rand(-8,8)),88,150),pa=win?pf-mg:pf+mg;
+ if(pa<84){pf+=84-pa;pa=84}
+ const T=state.lt[k]||(state.lt[k]=newT()),pl=[...R].sort((a,b)=>calc(b)-calc(a));
+ const on=pl.map((p,i)=>i<10||Math.random()<.2);
+ const role=i=>on[i]?(i<5?1:i<9?.4:i<12?.12:.03):0;
+ const w=pl.map((p,i)=>Math.pow(Math.max(1,p.off*.65+p.three*.22+calc(p)*.13)/60,2.4)*role(i));
+ const pts=distribute(pf,pl,w),reb=distribute(rand(40,50),pl,pl.map((p,i)=>Math.pow(p.reb/60,2)*role(i))),ast=distribute(rand(21,30),pl,w),
+  stl=distribute(rand(5,10),pl,pl.map((p,i)=>p.def*role(i))),blk=distribute(rand(3,7),pl,pl.map((p,i)=>(p.def*.5+p.reb*.5)*role(i)));
+ T.gp++;T.pf+=pf;T.pa+=pa;
+ pl.forEach((p,i)=>{
+  if(!on[i])return;
+  const S=state.lp[p.id]||(state.lp[p.id]=newS()),x=pts[i];
+  const t=Math.min(Math.floor(x/3),rand(0,Math.max(0,Math.round((p.three-45)/13))));let ft=rand(0,Math.min(4,x-3*t));if((x-3*t-ft)%2)ft++;
+  const fgm=(x-3*t-ft)/2+t,fga=fgm+Math.round(fgm*1.1)+rand(0,1),ta=t+Math.round(t*1.9)+rand(0,1);
+  S.gp++;S.min+=Math.max(1,MINB[i]+rand(-3,3));S.pts+=x;S.reb+=reb[i];S.ast+=ast[i];S.stl+=stl[i];S.blk+=blk[i];S.fgm+=fgm;S.fga+=fga;S.tm+=t;S.ta+=ta;
+  T.reb+=reb[i];T.ast+=ast[i];T.stl+=stl[i];T.blk+=blk[i];T.fgm+=fgm;T.fga+=fga;T.tm+=t;T.ta+=ta;
+ });
+}
+// Every AI team plays one game each time you finish a regular-season game.
+function leagueTick(){
+ state.standings.forEach(t=>{
+  const win=Math.random()<Math.min(.85,Math.max(.15,.5+((state.strengths&&state.strengths[t.name]||78)-78)*.017));
+  if(win)t.w++;else t.l++;
+  teamGame(t.name,win);
+ });
+}
+// Older saves have no league stats yet: rebuild them from the current records.
+function ensureLeague(){
+ if(!state.picked||!state.league)return;
+ if(state.played>0&&!Object.keys(state.lt).length)
+  state.standings.forEach(t=>{const o=[...Array(t.w).fill(1),...Array(t.l).fill(0)].sort(()=>Math.random()-.5);o.forEach(x=>teamGame(t.name,!!x))});
+ if(state.played>=41&&(!state.asg||state.asg.season!==state.season))runAllStar(true);
+}
+
+/* ---------- All-Star ---------- */
+function asgScore(p,s,tw,n){
+ const w=Math.min(1,n/20);let perf=0;
+ if(s&&s.gp){const g=s.gp;perf=s.pts/g+.55*s.reb/g+.8*s.ast/g+1.2*(s.stl+s.blk)/g-22}
+ return calc(p)+w*perf*.6+(tw-.5)*10;
+}
+function asgPool(){
+ const out=[],n=state.played;
+ const pct=k=>{if(k==='*')return n?state.wins/n:.5;const t=state.standings.find(x=>x.name===k);return t&&t.w+t.l?t.w/(t.w+t.l):.5};
+ const add=(k,R,S)=>R.forEach(p=>{if(p.inj)return;const s=S[p.id];if(n>=10&&(!s||s.gp<n*.5))return;out.push({p,k,c:confOf(k),s,sc:asgScore(p,s,pct(k),n)})});
+ add('*',state.roster,state.pstats);
+ Object.keys(state.league||{}).forEach(k=>add(k,state.league[k].roster,state.lp));
+ return out;
+}
+function asgSelect(){
+ const key=state.season+'|'+state.played+'|'+state.nextId+'|'+state.roster.map(p=>p.inj?1:0).join('');
+ if(asgSelect.k===key)return asgSelect.v;
+ const pool=asgPool(),res={};
+ ['E','W'].forEach(c=>{
+  const L=pool.filter(x=>x.c===c).sort((a,b)=>b.sc-a.sc),G=x=>x.p.pos==='PG'||x.p.pos==='SG';
+  const st=[...L.filter(G).slice(0,2),...L.filter(x=>!G(x)).slice(0,3)].sort((a,b)=>b.sc-a.sc);
+  res[c]={st,rs:L.filter(x=>!st.includes(x)).slice(0,7),all:L};
+ });
+ asgSelect.k=key;asgSelect.v=res;return res;
+}
+const asgRate=(S,c)=>average([...S[c].st,...S[c].rs].map(x=>calc(x.p)));
+function runAllStar(quiet){
+ if(state.asg&&state.asg.season===state.season)return;
+ asgSelect.k=null;
+ const S=asgSelect(),mu=(asgRate(S,'E')-asgRate(S,'W'))*.9,total=Math.round(355+rand(-24,24));
+ let mg=Math.round(mu+nz()*13);if(!mg)mg=Math.random()<.5?1:-1;
+ const e=Math.round((total+mg)/2),w=total-e,win=e>w?'E':'W',box=[];
+ ['E','W'].forEach(c=>{
+  const P=[...S[c].st.map(x=>({x,st:1})),...S[c].rs.map(x=>({x,st:0}))],tp=c==='E'?e:w;
+  const wt=P.map(o=>Math.pow(Math.max(1,o.x.p.off*.65+o.x.p.three*.22+calc(o.x.p)*.13)/60,2.4)*(o.st?1.15:.85));
+  const pts=distribute(tp,P,wt),reb=distribute(rand(36,50),P,P.map(o=>Math.pow(o.x.p.reb/60,2))),ast=distribute(rand(32,46),P,wt);
+  P.forEach((o,i)=>{const s=o.x.s;box.push({n:o.x.p.name,pos:o.x.p.pos,k:o.x.k,c,st:o.st,ovr:calc(o.x.p),pts:pts[i],reb:reb[i],ast:ast[i],
+   sl:s&&s.gp?[+(s.pts/s.gp).toFixed(1),+(s.reb/s.gp).toFixed(1),+(s.ast/s.gp).toFixed(1)]:null})});
+ });
+ let best=null;box.forEach(b=>{const v=b.pts+b.reb*1.2+b.ast*1.5+(b.c===win?7:0)+rand(0,6);if(!best||v>best.v)best={v,b}});
+ const m=best.b;
+ state.asg={season:state.season,e,w,win,mvp:m.n,mvpK:m.k,box};
+ state.allstars=state.allstars||[];
+ state.allstars.unshift({season:state.season,e,w,win,mvp:m.n,mvpT:m.k==='*'?state.team.name:m.k});state.allstars=state.allstars.slice(0,15);
+ settleAsg();
+ if(!quiet)toast('All-Star Game: East '+e+' – West '+w+'. MVP: '+m.n);
+}
+function asgNames(){
+ const A=state.asg&&state.asg.season===state.season?state.asg:null;
+ if(A)return{set:new Set(A.box.map(b=>b.n)),real:true};
+ if(state.played<5)return{set:new Set(),real:false};
+ const S=asgSelect();return{set:new Set(['E','W'].flatMap(c=>[...S[c].st,...S[c].rs].map(x=>x.p.name))),real:false};
+}
+
+/* ---------- Stats page ---------- */
+const SV={tab:'players',conf:'ALL',pos:'ALL',sort:'pts',dir:-1,q:'',n:25,qual:false,tconf:'ALL',tsort:'std'};
+function svSet(k,v){SV[k]=v;if(k!=='n'&&k!=='tab')SV.n=25;renderStats()}
+function svSort(k){if(SV.sort===k)SV.dir=-SV.dir;else{SV.sort=k;SV.dir=-1}SV.n=25;drawPl()}
+const f1=v=>Number(v).toFixed(1);
+const pctS=(a,b)=>b?(a/b*100).toFixed(1)+'%':'–';
+function allPlayers(){
+ const out=state.roster.map(p=>({p,k:'*',s:state.pstats[p.id]}));
+ Object.keys(state.league||{}).forEach(k=>state.league[k].roster.forEach(p=>out.push({p,k,s:state.lp[p.id]})));
+ return out;
+}
+function plRows(extra){
+ const n=state.played,q=SV.q.trim().toLowerCase();
+ let rows=allPlayers().filter(r=>(SV.conf==='ALL'||confOf(r.k)===SV.conf)&&(SV.pos==='ALL'||r.p.pos===SV.pos)&&(!q||r.p.name.toLowerCase().includes(q)||sn(r.k).toLowerCase().includes(q)));
+ rows.forEach(r=>{const s=r.s||{},g=s.gp||0;r.gp=g;r.min=g?s.min/g:0;r.pts=g?s.pts/g:0;r.reb=g?s.reb/g:0;r.ast=g?s.ast/g:0;r.stl=g?s.stl/g:0;r.blk=g?s.blk/g:0;r.fg=s.fga?s.fgm/s.fga*100:0;r.tp=s.ta?s.tm/s.ta*100:0;r.ovr=calc(r.p)});
+ rows=rows.filter(r=>r.gp>0&&(!SV.qual||r.gp>=Math.max(1,n*.5)));
+ if(extra)return rows;
+ if(SV.sort==='fg')rows=rows.filter(r=>r.s.fga>=Math.max(1,n*3));
+ if(SV.sort==='tp')rows=rows.filter(r=>r.s.ta>=Math.max(1,n*1.2));
+ return rows.sort((a,b)=>(a[SV.sort]-b[SV.sort])*SV.dir||b.pts-a.pts);
+}
+const cfDot=k=>`<span class="cf ${confOf(k)}" title="${CN[confOf(k)]}ern Conference">${confOf(k)}</span>`;
+function drawPl(){
+ const out=$('plOut');if(!out)return;
+ const rows=plRows(),all=plRows(true),nm_=asgNames(),shown=rows.slice(0,SV.n);
+ const L=(k,lab,fmt,min)=>{const t=[...all].filter(r=>!min||min(r)).sort((a,b)=>b[k]-a[k]).slice(0,3);
+  return `<div class="card lead"><small>${lab}</small>${t.length?t.map((r,i)=>`<div class="ld ${i?'':'top'}"><span>${i+1}. <b>${esc(r.p.name)}</b> <em>${tabbr(r.k)}</em></span><strong>${fmt(r[k])}</strong></div>`).join(''):'<div class="sub">–</div>'}</div>`};
+ const H=(k,l)=>`<th class="srt ${SV.sort===k?'on':''}" onclick="svSort('${k}')">${l}${SV.sort===k?(SV.dir<0?' ▾':' ▴'):''}</th>`;
+ out.innerHTML=`<div class="leads">${L('pts','POINTS',f1)}${L('reb','REBOUNDS',f1)}${L('ast','ASSISTS',f1)}${L('stl','STEALS',f1)}${L('blk','BLOCKS',f1)}${L('tp','3P%',v=>v.toFixed(1)+'%',r=>r.s.ta>=Math.max(1,state.played*1.2))}</div>`
+ +(shown.length?`<div class="table-wrap" style="margin-top:14px"><table style="min-width:860px"><thead><tr><th>#</th><th>PLAYER</th><th>TEAM</th><th>POS</th>${H('ovr','OVR')}${H('gp','GP')}${H('min','MPG')}${H('pts','PPG')}${H('reb','RPG')}${H('ast','APG')}${H('stl','SPG')}${H('blk','BPG')}${H('fg','FG%')}${H('tp','3P%')}</tr></thead><tbody>${shown.map((r,i)=>`<tr class="${r.k==='*'?'hl':''}"><td class="muted">${i+1}</td><td><b>${esc(r.p.name)}</b>${nm_.set.has(r.p.name)?`<span class="${nm_.real?'green':'purple'}" title="${nm_.real?'All-Star':'Projected All-Star'}"> ${nm_.real?'★':'☆'}</span>`:''}${r.p.inj?' <span class="red">OUT</span>':''}</td><td>${cfDot(r.k)} ${esc(tabbr(r.k))}</td><td>${r.p.pos}</td><td class="purple">${r.ovr}</td><td>${r.gp}</td><td>${f1(r.min)}</td><td class="green"><b>${f1(r.pts)}</b></td><td>${f1(r.reb)}</td><td>${f1(r.ast)}</td><td>${f1(r.stl)}</td><td>${f1(r.blk)}</td><td>${pctS(r.s.fgm,r.s.fga)}</td><td>${pctS(r.s.tm,r.s.ta)}</td></tr>`).join('')}</tbody></table></div>
+ <div class="between" style="margin-top:10px"><span class="sub">${shown.length} of ${rows.length} players · click a column to sort · ★ All-Star · ☆ projected</span>${rows.length>SV.n?`<button class="btn sm" onclick="svSet('n',${SV.n+50})">SHOW MORE</button>`:''}</div>`
+ :'<div class="empty">No player stats yet. Play or sim a game and the whole league fills in.</div>');
+}
+function teamRows(){
+ const T=k=>{const t={reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tm:0,ta:0};Object.values(state.pstats).forEach(s=>Object.keys(t).forEach(x=>t[x]+=s[x]||0));return t};
+ const me={k:'*',name:state.team.name,w:state.wins,l:state.losses,gp:state.played,pf:state.pointsFor,pa:state.pointsAgainst,...T(),ovr:teamRating()};
+ const rows=[me,...state.standings.map(t=>({k:t.name,name:t.name,w:t.w,l:t.l,ovr:state.strengths[t.name],...newT(),...(state.lt[t.name]||{})}))];
+ rows.forEach(r=>{const g=r.gp||0;r.c=confOf(r.k);r.pct=r.w+r.l?r.w/(r.w+r.l):0;r.pts=g?r.pf/g:0;r.opp=g?r.pa/g:0;r.diff=r.pts-r.opp;r.rpg=g?r.reb/g:0;r.apg=g?r.ast/g:0;r.spg=g?r.stl/g:0;r.bpg=g?r.blk/g:0;r.fg=r.fga?r.fgm/r.fga*100:0;r.tp=r.ta?r.tm/r.ta*100:0});
+ ['E','W'].forEach(c=>{const L=rows.filter(r=>r.c===c).sort((a,b)=>b.pct-a.pct||b.diff-a.diff||(a.name<b.name?-1:1));L.forEach((r,i)=>{r.seed=i+1;r.gb=((L[0].w-r.w)+(r.l-L[0].l))/2})});
+ return rows;
+}
+function drawTeams(){
+ const out=$('tmOut');if(!out)return;
+ const rows=teamRows(),conf=SV.tconf==='ALL'?['E','W']:[SV.tconf],asc=SV.tsort==='opp';
+ const html=conf.map(c=>{
+  let L=rows.filter(r=>r.c===c).sort((a,b)=>a.seed-b.seed);
+  if(SV.tsort!=='std')L=[...L].sort((a,b)=>asc?a.opp-b.opp:b[SV.tsort]-a[SV.tsort]);
+  return `<div class="section"><div class="section-head"><h2><span class="cf ${c}">${c}</span> ${CN[c]}ern Conference</h2><span class="sub">${L.reduce((a,r)=>a+(r.k==='*'?1:0),0)?'YOU ARE HERE':''}</span></div>
+  <div class="table-wrap"><table style="min-width:900px"><thead><tr><th>SEED</th><th>TEAM</th><th>W</th><th>L</th><th>PCT</th><th>GB</th><th>PPG</th><th>OPP</th><th>DIFF</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3P%</th><th>OVR</th></tr></thead><tbody>${L.map(r=>`<tr class="${r.k==='*'?'hl':''} ${r.seed===6?'cut6':''} ${r.seed===10?'cut10':''}"><td class="muted">${r.seed}</td><td><b>${esc(r.name)}</b></td><td>${r.w}</td><td>${r.l}</td><td>${r.pct.toFixed(3)}</td><td>${r.gb?f1(r.gb):'–'}</td><td>${r.gp?f1(r.pts):'–'}</td><td>${r.gp?f1(r.opp):'–'}</td><td class="${r.diff>0?'green':r.diff<0?'red':''}">${r.gp?(r.diff>0?'+':'')+f1(r.diff):'–'}</td><td>${r.gp?f1(r.rpg):'–'}</td><td>${r.gp?f1(r.apg):'–'}</td><td>${r.gp?f1(r.spg):'–'}</td><td>${r.gp?f1(r.bpg):'–'}</td><td>${r.gp?pctS(r.fgm,r.fga):'–'}</td><td>${r.gp?pctS(r.tm,r.ta):'–'}</td><td class="purple">${r.ovr}</td></tr>`).join('')}</tbody></table></div></div>`}).join('');
+ out.innerHTML=html+'<p class="sub" style="margin-top:10px">Solid line: seeds 1–6 qualify directly · dashed line: seeds 7–10 go to the play-in.</p>';
+}
+function asRoster(c,list,real){
+ return `<div class="card"><div class="section-head"><h3 style="margin:0"><span class="cf ${c}">${c}</span> ${CN[c]}ern Conference</h3><span class="pill">${real?'FINAL ROSTER':'PROJECTED'}</span></div>`
+ +['starters','reserves'].map((g,gi)=>`<div class="topline" style="margin:12px 0 4px">${g.toUpperCase()}</div>`+list.filter(x=>x.st===(gi?0:1)).map(x=>`<div class="asr ${x.k==='*'?'hl':''}"><span class="pos">${x.pos}</span><span class="nmx"><b>${esc(x.n)}</b><small>${esc(tabbr(x.k))}${x.line?' · '+x.line:''}</small></span><span class="rating" style="color:${rCol(x.ovr)}">${x.ovr}</span></div>`).join('')).join('')+'</div>';
+}
+function drawAsg(){
+ const out=$('asOut');if(!out)return;
+ const A=state.asg&&state.asg.season===state.season?state.asg:null,S=asgSelect();
+ const proj=c=>[...S[c].st.map(x=>({st:1,x})),...S[c].rs.map(x=>({st:0,x}))].map(({st,x})=>({st,n:x.p.name,pos:x.p.pos,k:x.k,ovr:calc(x.p),line:x.s&&x.s.gp?f1(x.s.pts/x.s.gp)+' / '+f1(x.s.reb/x.s.gp)+' / '+f1(x.s.ast/x.s.gp):''}));
+ let h='';
+ if(A){
+  const top=[...A.box].sort((a,b)=>b.pts-a.pts).slice(0,6);
+  h+=`<div class="card asg-hero"><div class="topline">ALL-STAR GAME · SEASON ${A.season}</div><div class="scoreline" style="margin:14px 0"><div><div class="team-label">EAST</div><div class="bigscore ${A.win==='E'?'green':''}" style="font-size:64px">${A.e}</div></div><div class="score-vs">FINAL</div><div><div class="team-label">WEST</div><div class="bigscore ${A.win==='W'?'green':''}" style="font-size:64px">${A.w}</div></div></div>
+  <div class="row" style="justify-content:center"><span class="pill green">MVP · ${esc(A.mvp)} (${esc(A.mvpK==='*'?state.team.name:A.mvpK)})</span><span class="pill">${A.win==='E'?'EAST':'WEST'} WINS</span></div></div>
+  <div class="section card"><div class="section-head"><h2>Top performers</h2></div>${tbl(['PLAYER','CONF','TEAM','PTS','REB','AST'],top.map(b=>`<tr class="${b.k==='*'?'hl':''}"><td><b>${esc(b.n)}</b>${b.n===A.mvp?' <span class="green">MVP</span>':''}</td><td>${b.c}</td><td>${esc(tabbr(b.k))}</td><td class="green">${b.pts}</td><td>${b.reb}</td><td>${b.ast}</td></tr>`).join(''))}</div>
+  <div class="section grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">${['E','W'].map(c=>asRoster(c,A.box.filter(b=>b.c===c).map(b=>({st:b.st,n:b.n,pos:b.pos,k:b.k,ovr:b.ovr,line:b.sl?b.sl.join(' / ')+' (season)':''})),true)).join('')}</div>`;
+ }else{
+  const left=Math.max(0,41-state.played),mu=(asgRate(S,'E')-asgRate(S,'W'))*.9;
+  h+=`<div class="card asg-hero"><div class="topline">ALL-STAR WEEKEND</div><h2 style="font-size:32px;margin:6px 0">${left?'Tips off after game 41':'Starting soon'}</h2><p class="sub">${left} regular-season game${left===1?'':'s'} to go. Rosters below are projected from current stats, ratings and team success: 2 guards + 3 frontcourt starters and 7 reserves per conference.</p>
+  <div class="row"><span class="pill">${mu>=0?'EAST':'WEST'} FAVORED BY ${Math.abs(mu).toFixed(1)}</span><button class="btn primary sm" onclick="BV.tab='asg';navigate('bet')">BET ON THE ALL-STAR GAME →</button></div></div>
+  <div class="section grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">${['E','W'].map(c=>asRoster(c,proj(c),false)).join('')}</div>`;
+ }
+ if(state.allstars&&state.allstars.length>(A?1:0))h+=`<div class="section card"><h2 style="margin-bottom:10px">Past All-Star games</h2>${state.allstars.filter(x=>!A||x.season!==A.season).map(x=>`<div class="schedule-row" style="grid-template-columns:80px 1fr 110px"><span class="muted">SEASON ${x.season}</span><span>MVP <b>${esc(x.mvp)}</b> <small class="muted">${esc(x.mvpT)}</small></span><span class="schedule-result ${x.win==='E'?'':''}">E ${x.e}–${x.w} W</span></div>`).join('')}</div>`;
+ out.innerHTML=h;
+}
+function myStatsHTML(){
+ const n=state.played,T=k=>Object.values(state.pstats).reduce((a,s)=>a+s[k],0),f=(a,b)=>b?(a/b*100).toFixed(1)+'%':'–',pg=v=>n?(v/n).toFixed(1):'0.0';
+ const tm=[['PPG',pg(state.pointsFor)],['OPP PPG',pg(state.pointsAgainst)],['POINT DIFF',n?((state.pointsFor-state.pointsAgainst)/n).toFixed(1):'0.0'],['FG%',f(T('fgm'),T('fga'))],['3P%',f(T('tm'),T('ta'))],['RPG',pg(T('reb'))],['APG',pg(T('ast'))],['SPG',pg(T('stl'))],['BPG',pg(T('blk'))]];
+ const rows=state.roster.map(p=>({p,s:state.pstats[p.id]})).filter(x=>x.s&&x.s.gp).sort((a,b)=>b.s.pts/b.s.gp-a.s.pts/a.s.gp);
+ const o=state.offseason,a=(v,g)=>(v/g).toFixed(1);
+ return `<div class="section"><h2>Team stats</h2></div><div class="grid stats-grid" style="margin-top:13px">${tm.map(t=>`<div class="card metric"><small>${t[0]}</small><strong>${t[1]}</strong></div>`).join('')}</div>`
+ +`<div class="section card"><div class="section-head"><h2>Your players</h2><span class="sub">PER GAME · SEASON ${state.season}</span></div>`+(rows.length?`<div class="table-wrap"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3P%</th></tr></thead><tbody>${rows.map(({p,s})=>`<tr><td><b>${esc(p.name)}</b></td><td>${p.pos}</td><td class="purple">${calc(p)}</td><td>${s.gp}</td><td>${a(s.min,s.gp)}</td><td class="green"><b>${a(s.pts,s.gp)}</b></td><td>${a(s.reb,s.gp)}</td><td>${a(s.ast,s.gp)}</td><td>${a(s.stl,s.gp)}</td><td>${a(s.blk,s.gp)}</td><td>${f(s.fgm,s.fga)}</td><td>${f(s.tm,s.ta)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Play a game to see player stats.</div>')+'</div>'
+ +(o?`<div class="section card"><div class="section-head"><h2>Offseason report</h2><span class="pill">SEASON ${o.season} → ${o.season+1}</span></div><div class="table-wrap"><table><thead><tr><th>PLAYER</th><th>AGE</th><th>OVR</th><th>CHANGE</th></tr></thead><tbody>${o.ch.map(c=>`<tr><td><b>${esc(c.name)}</b></td><td>${c.age}</td><td>${c.to}</td><td class="${c.to>c.from?'green':c.to<c.from?'red':''}">${c.to>c.from?'+':''}${c.to-c.from}</td></tr>`).join('')}</tbody></table></div><p class="sub" style="margin-top:12px"><b>Retired:</b> ${o.ret.length?esc(o.ret.join(', ')):'none'}<br><b>Draft class:</b> ${o.rook.length?esc(o.rook.join(', ')):'none'}</p></div>`:'')
+ +(state.seasons.length?`<div class="section card"><h2 style="margin-bottom:10px">Past seasons</h2>${state.seasons.map(s=>`<div class="schedule-row" style="grid-template-columns:90px 1fr 90px"><span class="muted">SEASON ${s.season}</span><span>Champion: <b>${esc(s.champ)}</b></span><span class="schedule-result">${s.w}–${s.l}</span></div>`).join('')}</div>`:'');
+}
+function renderStats(){
+ const el=$('statsBody');if(!el||!$('stats').classList.contains('active'))return;
+ if(!state.picked){el.innerHTML='<div class="empty">Pick a team to see stats.</div>';return}
+ const T=(k,l)=>`<button class="tb ${SV.tab===k?'on':''}" onclick="svSet('tab','${k}')">${l}</button>`;
+ const C=(k,v,l)=>`<button class="tb sm ${SV[k]===v?'on':''}" onclick="svSet('${k}','${v}')">${l}</button>`;
+ let h=`<div class="tbar">${T('players','PLAYERS')}${T('teams','TEAMS')}${T('allstar','ALL-STAR')}${T('mine','MY FRANCHISE')}</div>`;
+ if(SV.tab==='players')h+=`<div class="tbar">${C('conf','ALL','ALL')}${C('conf','E','EAST')}${C('conf','W','WEST')}<span class="sep"></span>${['ALL',...POSORD].map(p=>C('pos',p,p)).join('')}<span class="sep"></span><button class="tb sm ${SV.qual?'on':''}" onclick="svSet('qual',${!SV.qual})" title="Played in at least half of the games">QUALIFIED</button><input class="srch" placeholder="Search player or team…" value="${esc(SV.q)}" oninput="SV.q=this.value;SV.n=25;drawPl()"></div><div id="plOut" class="section"></div>`;
+ else if(SV.tab==='teams')h+=`<div class="tbar">${C('tconf','ALL','BOTH')}${C('tconf','E','EAST')}${C('tconf','W','WEST')}<span class="sep"></span><select class="srch" style="max-width:190px" onchange="svSet('tsort',this.value)">${[['std','Sort: standings'],['pts','Sort: points'],['opp','Sort: best defense'],['diff','Sort: point diff'],['rpg','Sort: rebounds'],['apg','Sort: assists'],['fg','Sort: FG%'],['tp','Sort: 3P%'],['ovr','Sort: overall']].map(o=>`<option value="${o[0]}" ${SV.tsort===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div><div id="tmOut"></div>`;
+ else if(SV.tab==='allstar')h+='<div id="asOut" class="section"></div>';
+ else h+=myStatsHTML();
+ el.innerHTML=h;
+ if(SV.tab==='players')drawPl();else if(SV.tab==='teams')drawTeams();else if(SV.tab==='allstar')drawAsg();
+}
+
+/* ================= POSTSEASON (East/West brackets) ================= */
+const RN={p1:'PLAY-IN · ROUND 1',p2:'PLAY-IN · FINAL SPOT',r1:'PLAYOFFS · ROUND 1',r2:'CONFERENCE SEMIFINALS',cf:'CONFERENCE FINALS',fin:'NBA FINALS',done:'FINAL RESULT'};
+const RNS={p1:'Play-in',p2:'Play-in',r1:'Round 1',r2:'Semis',cf:'Conf. finals',fin:'Finals'};
+let PCREC=null;
+function nm(k){return k==='*'?state.team.name:k}
+function nextG(){
+ if(state.played<82)return state.schedule[state.played]||null;
+ if(!state.post)startPost();
+ return state.post.next;
+}
+function mk(a,b,need,conf,rd,elim){return {a,b,need,wa:0,wb:0,done:false,w:null,l:null,conf:conf||null,rd,sid:rd+':'+a+'|'+b,elim:elim===undefined?1:elim}}
+function pc(k){const t=(PCREC||state.post.rec)[k];return t.w/((t.w+t.l)||1)}
+function st(k){return k==='*'?teamRating():(state.strengths[k]||78)}
+function pWin(a,b){return 1/(1+Math.exp(-((st(a)-st(b))*.08+(pc(a)-pc(b))*2)))}
+function aiGame(a,b){return Math.random()<pWin(a,b)}
+function chk(m){if(m.wa>=m.need){m.done=true;m.w=m.a;m.l=m.b}else if(m.wb>=m.need){m.done=true;m.w=m.b;m.l=m.a}}
+function plog(t){state.post.log.unshift(t)}
+function piM(s){return [mk(s.E[6],s.E[7],1,'E','p1',0),mk(s.E[8],s.E[9],1,'E','p1',1),mk(s.W[6],s.W[7],1,'W','p1',0),mk(s.W[8],s.W[9],1,'W','p1',1)]}
+// Builds the next round once every series of the current round is finished.
+function advRound(P,real){
+ const W=P.m.map(m=>m.w),L=P.m.map(m=>m.l),s=P.seeds;
+ if(P.round==='p1'){P.p7={E:W[0],W:W[2]};P.round='p2';P.m=[mk(L[0],W[1],1,'E','p2'),mk(L[2],W[3],1,'W','p2')]}
+ else if(P.round==='p2'){
+  const q={E:[...s.E.slice(0,6),P.p7.E,W[0]],W:[...s.W.slice(0,6),P.p7.W,W[1]]};P.round='r1';P.m=[];
+  ['E','W'].forEach(c=>{const x=q[c];P.m.push(mk(x[0],x[7],4,c,'r1'),mk(x[3],x[4],4,c,'r1'),mk(x[2],x[5],4,c,'r1'),mk(x[1],x[6],4,c,'r1'))});
+  if(real)plog('The 16-team playoff bracket is set.');
+ }
+ else if(P.round==='r1'){P.round='r2';P.m=[mk(W[0],W[1],4,'E','r2'),mk(W[2],W[3],4,'E','r2'),mk(W[4],W[5],4,'W','r2'),mk(W[6],W[7],4,'W','r2')]}
+ else if(P.round==='r2'){P.round='cf';P.m=[mk(W[0],W[1],4,'E','cf'),mk(W[2],W[3],4,'W','cf')]}
+ else if(P.round==='cf'){P.round='fin';P.m=[mk(W[0],W[1],4,null,'fin')]}
+ else{P.champ=W[0];P.round='done';P.m=[];if(real)plog('🏆 '+nm(W[0])+' win the championship!')}
+}
+function chkR(m){chk(m);if(m.done&&!m.s){m.s=1;serDone(m)}}
+function startPost(){
+ const all=[...state.standings.map(t=>({k:t.name,w:t.w,l:t.l})),{k:'*',w:state.wins,l:state.losses}];
+ const rec={};all.forEach(t=>rec[t.k]=t);
+ const seeds={E:[],W:[]};
+ ['E','W'].forEach(c=>seeds[c]=all.filter(t=>confOf(t.k)===c).sort((x,y)=>y.w-x.w||(x.k==='*'?-1:1)).map(t=>t.k));
+ state.post={v2:1,rec,seeds,round:'p1',p7:null,m:piM(seeds),n:83,log:[],champ:null,next:null};
+ const c=confOf('*'),me=seeds[c].indexOf('*')+1;
+ plog('Regular season over. You finished as the #'+me+' seed in the '+CN[c]+'ern Conference.'+(me>10?' You missed the postseason.':me>6?' You are in the play-in.':' You earned a direct playoff spot.'));
+ [...seeds.E.slice(10),...seeds.W.slice(10)].forEach(markOut);resolveBets();
+ postStep();
+}
+function postStep(){
+ const P=state.post;P.next=null;
+ for(;;){
+  const mine=P.m.find(m=>!m.done&&(m.a==='*'||m.b==='*'));
+  if(mine){
+   const o=mine.a==='*'?mine.b:mine.a,hi=pc('*')>=pc(o),g=mine.wa+mine.wb+1;
+   P.next={number:P.n++,opponent:nm(o),rating:state.strengths[o]||Math.round(60+pc(o)*40),result:null,post:true,home:mine.need===1?hi:([1,2,5,7].includes(g)?hi:!hi),label:RN[P.round]+(mine.need>1?' · GAME '+g:''),sid:mine.sid};
+   return;
+  }
+  P.m.forEach(m=>{while(!m.done){aiGame(m.a,m.b)?m.wa++:m.wb++;chkR(m)}});
+  advRound(P,true);
+  if(P.round==='done')return;
+ }
+}
+function postResult(win){
+ const P=state.post,m=P.m.find(x=>!x.done&&(x.a==='*'||x.b==='*'));
+ if(m){if((m.a==='*')===win)m.wa++;else m.wb++;chkR(m)}
+ P.m.forEach(x=>{if(!x.done&&x.a!=='*'&&x.b!=='*'){aiGame(x.a,x.b)?x.wa++:x.wb++;chkR(x)}});
+ postStep();
+}
+function serDone(m){
+ plog(RN[m.rd]+': '+nm(m.w)+' beat '+nm(m.l)+' '+Math.max(m.wa,m.wb)+'–'+Math.min(m.wa,m.wb));
+ state.bets.forEach(b=>b.sels.forEach(s=>{
+  if(s.res!=null)return;
+  if(s.kind==='ser'&&s.sid===m.sid)s.res=s.side===m.w?1:0;
+  else if(s.kind==='conf'&&m.rd==='cf'&&s.cf===m.conf)s.res=s.side===m.w?1:0;
+  else if(s.kind==='fut'&&m.rd==='fin')s.res=s.side===m.w?1:0;
+ }));
+ if(m.elim)markOut(m.l);
+ resolveBets();
+}
+function markOut(k){state.bets.forEach(b=>b.sels.forEach(s=>{if(s.res==null&&(s.kind==='fut'||s.kind==='conf')&&s.side===k)s.res=0}))}
+function serP(m,p){const f=(a,b)=>a>=m.need?1:b>=m.need?0:p*f(a+1,b)+(1-p)*f(a,b+1);return f(m.wa,m.wb)}
+function aliveTeams(P){
+ const out=new Set();
+ if(P.round==='p1'||P.round==='p2')['E','W'].forEach(c=>P.seeds[c].slice(0,6).forEach(k=>out.add(k)));
+ if(P.round==='p2')['E','W'].forEach(c=>out.add(P.p7[c]));
+ P.m.forEach(m=>(m.done?(m.elim?[m.w]:[m.w,m.l]):[m.a,m.b]).forEach(k=>out.add(k)));
+ return out;
+}
+// Projected bracket used for futures odds before the regular season ends.
+function projPost(){
+ const rem=Math.max(0,82-state.played),rec={};
+ const pw=k=>Math.min(.85,Math.max(.15,.5+(st(k)-78)*.017));
+ const all=[{k:'*',w:state.wins,l:state.losses},...state.standings.map(t=>({k:t.name,w:t.w,l:t.l}))].map(t=>({k:t.k,w:t.w+rem*pw(t.k)}));
+ all.forEach(t=>{const w=Math.round(t.w);rec[t.k]={w,l:Math.max(0,82-w)}});
+ const seeds={E:[],W:[]};
+ ['E','W'].forEach(c=>seeds[c]=all.filter(t=>confOf(t.k)===c).sort((a,b)=>b.w-a.w||(a.k==='*'?-1:1)).map(t=>t.k));
+ return{P:{round:'p1',seeds,p7:null,m:piM(seeds),champ:null},rec};
+}
+// Monte Carlo of everything that is still to be played.
+function mcFuture(){
+ const real=!!state.post&&state.post.round!=='done';
+ let P0;if(real){P0=state.post;PCREC=null}else{const j=projPost();P0=j.P;PCREC=j.rec}
+ const N=300,champ={},conf={E:{},W:{}};
+ try{
+  for(let i=0;i<N;i++){
+   const P={round:P0.round,seeds:P0.seeds,p7:P0.p7?{...P0.p7}:null,m:P0.m.map(m=>({...m})),champ:null};
+   for(let g=0;P.round!=='done'&&g<8;g++){
+    P.m.forEach(m=>{while(!m.done){aiGame(m.a,m.b)?m.wa++:m.wb++;chk(m)}});
+    if(P.round==='cf')P.m.forEach(m=>{conf[m.conf][m.w]=(conf[m.conf][m.w]||0)+1});
+    advRound(P,false);
+   }
+   champ[P.champ]=(champ[P.champ]||0)+1;
+  }
+ }finally{PCREC=null}
+ const alive=real?aliveTeams(P0):null,pr=(o,k)=>((o[k]||0)+.5)/(N+1);
+ const keys=[state.picked?'*':null,...others()].filter(Boolean).filter(k=>!alive||alive.has(k));
+ return{keys,champ:Object.fromEntries(keys.map(k=>[k,pr(champ,k)])),conf:{E:Object.fromEntries(keys.filter(k=>confOf(k)==='E').map(k=>[k,pr(conf.E,k)])),W:Object.fromEntries(keys.filter(k=>confOf(k)==='W').map(k=>[k,pr(conf.W,k)]))}};
+}
+function seriesLine(m){return m.wa===m.wb?'Series tied '+m.wa+'–'+m.wb:(m.wa>m.wb?sn(m.a):sn(m.b))+' lead '+Math.max(m.wa,m.wb)+'–'+Math.min(m.wa,m.wb)}
+function renderPost(){
+ const P=state.post,el=$('postBody');
+ if(!P){el.innerHTML='<div class="section card empty">Finish the 82-game regular season to unlock the play-in and playoffs.<br><br><button class="btn sm" onclick="BV.tab=\'fut\';navigate(\'bet\')">PLAYOFF FUTURES ARE ALREADY OPEN IN BETTING →</button></div>';return}
+ if(!P.v2){el.innerHTML=(P.champ?`<div class="banner">🏆 ${esc(nm(P.champ))} won the championship!<br><button class="btn success" style="margin-top:10px" onclick="newSeason()">START NEW SEASON →</button></div>`:'')+`<div class="section card"><h2>Postseason log</h2><div class="log">${(P.log||[]).map(x=>`<div class="log-entry">${esc(x)}</div>`).join('')}</div></div>`;return}
+ const mrow=m=>`<div class="schedule-row ser ${m.done?'dn':''}" style="grid-template-columns:1fr 150px 1fr"><b class="${m.a==='*'?'purple':''} ${m.done&&m.w===m.a?'green':''}">${esc(nm(m.a))}</b><span style="text-align:center"><b>${m.wa}–${m.wb}</b><br><small class="muted">${m.done?'FINAL':seriesLine(m)}</small></span><b style="text-align:right" class="${m.b==='*'?'purple':''} ${m.done&&m.w===m.b?'green':''}">${esc(nm(m.b))}</b></div>`;
+ const grp=c=>{const L=P.m.filter(m=>m.conf===c);return L.length?`<div class="topline" style="margin:12px 0 4px"><span class="cf ${c}">${c}</span> ${CN[c]}</div>${L.map(mrow).join('')}`:''};
+ el.innerHTML=(P.champ?`<div class="banner">🏆 ${esc(nm(P.champ))} won the championship!<br><button class="btn success" style="margin-top:10px" onclick="newSeason()">START NEW SEASON →</button></div>`:'')
+ +(P.m.length?`<div class="section card"><div class="section-head"><h2>${RN[P.round]}</h2><div class="row">${P.next?'<span class="pill">YOUR GAME NEXT</span>':''}<button class="btn sm primary" onclick="BV.tab='po';navigate('bet')">BET ON SERIES →</button></div></div>${grp('E')}${grp('W')}${P.m.some(m=>!m.conf)?P.m.filter(m=>!m.conf).map(mrow).join(''):''}</div>`:'')
+ +`<div class="section grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">${['E','W'].map(c=>`<div class="card"><div class="section-head"><h3 style="margin:0"><span class="cf ${c}">${c}</span> ${CN[c]}ern seeds</h3></div>${P.seeds[c].slice(0,10).map((k,i)=>`<div class="asr ${k==='*'?'hl':''}"><span class="pos">${i+1}</span><span class="nmx"><b>${esc(nm(k))}</b><small>${P.rec[k].w}–${P.rec[k].l}${i>5?' · play-in':''}</small></span></div>`).join('')}</div>`).join('')}</div>`
+ +`<div class="section card"><h2>Postseason log</h2><div class="log">${P.log.map(x=>`<div class="log-entry">${esc(x)}</div>`).join('')}</div></div>`;
+}
+
+/* ================= SPORTSBOOK ================= */
+const BV={tab:'games',mode:'single',allFut:false,hist:'all',props:false,open:false};
+let SLIP=[];
+const GK=['ml','sp','ou','pp'];
+const sg=n=>(n>0?'+':'')+n;
+const fmtO=o=>state.oddsFmt==='am'?(o>=2?'+'+Math.round((o-1)*100):String(Math.round(-100/(o-1)))):o.toFixed(2)+'x';
+const OD=(p,m,lo,hi)=>Math.min(hi||200,Math.max(lo||1.03,Math.round((m||.92)/Math.max(p,.002)*100)/100));
+
+// Expected score of one of your games, using the same formulas as the game engine.
+function simParts(s){
+ const R=state.roster,ownOff=average(R.map(p=>p.off)),ownDef=average(R.map(p=>p.def)),adv=teamRating()-s.rating;
+ const df=state.settings.difficulty==='hard'?-5:state.settings.difficulty==='easy'?5:0,ha=s.home===false?-.9:.9;
+ const ob=27+(ownOff-75)*.10+adv*.12+df*.4+ha,pb=26+(s.rating-75)*.11-(ownDef-75)*.09-df*.4-ha;
+ return{own:ob*4,opp:pb*4};
+}
+function lineFor(s){
+ const {own,opp}=simParts(s),mu=own-opp,p=1/(1+Math.exp(-mu/6.6)),od=q=>Math.max(1.05,Math.round(.95/q*100)/100);
+ return{sp:-Math.round(mu*2)/2,tot:Math.floor(own+opp)+.5,me:od(p),opp:od(1-p),p,mu};
+}
+function propsFor(g){
+ const {own}=simParts(g),Lp=lineup(),w=Lp.map((p,i)=>p.inj?0:Math.pow(Math.max(1,p.off*.65+p.three*.22+(p.ovr||calc(p))*.13)/60,3)*(i<5?1:i<10?.4:.03)),sum=w.reduce((a,b)=>a+b,0)||1;
+ return Lp.map((p,i)=>({p,mu:own*w[i]/sum,q:w[i]/sum})).filter(x=>x.mu>0).sort((a,b)=>b.mu-a.mu).slice(0,4).map(x=>{
+  const sd=Math.sqrt(x.mu*(1-x.q)+Math.pow(x.mu*.12,2)),line=Math.round(x.mu-.5)+.5,po=1/(1+Math.exp((line-x.mu)/(sd*.58))),od=q=>Math.max(1.05,Math.round(.93/q*100)/100);
+  return{p:x.p,line,mu:x.mu,over:od(po),under:od(1-po)};
+ });
+}
+
+/* ---------- market builders (memoised) ---------- */
+function bettableGames(){
+ const cur=state.current&&!state.current.done?state.current.number:-1;
+ if(state.played<82)return state.schedule.slice(state.played,state.played+5).filter(s=>s.number!==cur);
+ const n=state.post&&state.post.next;return n&&n.number!==cur?[n]:[];
+}
+function gameMkts(){
+ const gs=bettableGames(),sig=[state.season,state.played,teamRating(),state.settings.difficulty,gs.map(g=>g.number+g.opponent+g.rating+g.home).join(),state.roster.map(p=>p.id+(p.inj?'x':'')).join()].join('|');
+ if(gameMkts.s===sig)return gameMkts.v;
+ const map={},R=s=>(map[s.key]=s);
+ const list=gs.map((g,gi)=>{
+  const L=lineFor(g),n=g.number,tag=g.post?'PO#'+n:'G'+n,home=g.home!==false,you=state.team.name,opp=g.opponent,sub=(g.post?g.label+' · ':'')+you+(home?' vs ':' @ ')+opp;
+  const S=(kind,side,line,odds,label,id)=>R({kind,mkt:kind+'|'+(id||n),gno:n,side,line,odds,label:tag+' '+label,sub,grp:'g'+n,key:kind+'|'+(id||n)+'|'+side});
+  const G={g,L,n,home,
+   ml:[S('ml','me',0,L.me,'ML: '+you),S('ml','opp',0,L.opp,'ML: '+opp)],
+   sp:[S('sp','me',L.sp,1.91,'spread: '+you+' '+sg(L.sp)),S('sp','opp',L.sp,1.91,'spread: '+opp+' '+sg(-L.sp))],
+   ou:[S('ou','Over',L.tot,1.91,'total: Over '+L.tot),S('ou','Under',L.tot,1.91,'total: Under '+L.tot)],pp:[]};
+  if(gi===0)G.pp=propsFor(g).map(x=>{const id=n+'|'+x.p.id;
+   const o=R({kind:'pp',mkt:'pp|'+id,gno:n,pid:x.p.id,side:'Over',line:x.line,odds:x.over,label:tag+' '+x.p.name+' points: Over '+x.line,sub,grp:'g'+n,key:'pp|'+id+'|Over'}),
+    u=R({kind:'pp',mkt:'pp|'+id,gno:n,pid:x.p.id,side:'Under',line:x.line,odds:x.under,label:tag+' '+x.p.name+' points: Under '+x.line,sub,grp:'g'+n,key:'pp|'+id+'|Under'});
+   return{p:x.p,line:x.line,mu:x.mu,o,u}});
+  return G;
+ });
+ gameMkts.s=sig;return gameMkts.v={list,map};
+}
+function serMkts(){
+ const P=state.post,map={};
+ if(!P||!P.v2||!P.m.length)return{list:[],map};
+ const sig=P.round+'|'+teamRating()+'|'+P.m.map(m=>m.wa+'-'+m.wb+m.done).join();
+ if(serMkts.s===sig&&serMkts.p===P)return serMkts.v;
+ const list=P.m.filter(m=>!m.done).map(m=>{
+  const pa=serP(m,pWin(m.a,m.b)),S=(side,p)=>{const o={kind:'ser',mkt:'ser|'+m.sid,sid:m.sid,side,odds:OD(p,.95,1.03,60),p,label:RNS[m.rd]+': '+nm(side)+' to win ('+sn(m.a)+' v '+sn(m.b)+')',sub:seriesLine(m),grp:'s'+m.sid,key:'ser|'+m.sid+'|'+side};map[o.key]=o;return o};
+  return{m,A:S(m.a,pa),B:S(m.b,1-pa)};
+ });
+ serMkts.s=sig;serMkts.p=P;return serMkts.v={list,map};
+}
+function futMkts(){
+ const P=state.post;
+ if(P&&P.round==='done')return{map:{},champ:[],E:[],W:[],closed:true};
+ const sig=P?'p'+P.round+P.m.map(m=>m.wa+'-'+m.wb+m.done).join():'r'+state.season+'|'+state.played+'|'+teamRating();
+ if(futMkts.s===sig&&futMkts.p===P)return futMkts.v;
+ const mc=mcFuture(),map={};
+ const S=(kind,id,k,p,label,cf)=>{const o={kind,mkt:kind+'|'+id,cf,side:k,odds:OD(p,.88,1.4,200),p,label,sub:'',grp:kind+id,key:kind+'|'+id+'|'+k};map[o.key]=o;return o};
+ const closed=c=>P&&(P.round==='fin'||(P.round==='cf'&&P.m.some(m=>m.conf===c&&m.done)));
+ const cf=c=>closed(c)?[]:Object.keys(mc.conf[c]).map(k=>S('conf',c,k,mc.conf[c][k],CN[c]+' champion: '+nm(k),c)).sort((a,b)=>a.odds-b.odds);
+ const v={map,champ:mc.keys.map(k=>S('fut','champ',k,mc.champ[k],'Champion: '+nm(k))).sort((a,b)=>a.odds-b.odds),E:cf('E'),W:cf('W')};
+ futMkts.s=sig;futMkts.p=P;return futMkts.v=v;
+}
+function asgMkts(){
+ if(!state.picked||state.played>=41||(state.asg&&state.asg.season===state.season))return null;
+ const S=asgSelect(),sig=state.season+'|'+state.played+'|'+state.nextId+'|'+teamRating();
+ if(asgMkts.s===sig)return asgMkts.v;
+ const map={},R=s=>(map[s.key]=s),mu=(asgRate(S,'E')-asgRate(S,'W'))*.9,pE=1/(1+Math.exp(-mu/7.6)),line=-(Math.round(mu-.5)+.5),tot=355.5;
+ const A=(kind,side,ln,odds,label,id)=>R({kind,mkt:kind+'|'+(id||1),side,line:ln,odds,label:'All-Star '+label,sub:'All-Star Game · East vs West',grp:'asg',key:kind+'|'+(id||1)+'|'+side});
+ const wt=c=>{const L=[...S[c].st.map(x=>({x,w:Math.exp((calc(x.p)-80)*.16)*1.35})),...S[c].rs.map(x=>({x,w:Math.exp((calc(x.p)-80)*.16)*.7}))],t=L.reduce((a,o)=>a+o.w,0);return L.map(o=>({x:o.x,p:(c==='E'?pE:1-pE)*o.w/t}))};
+ const mvp=[...wt('E'),...wt('W')].sort((a,b)=>b.p-a.p).slice(0,10).map(o=>({x:o.x,p:o.p,s:A('asgmvp',o.x.p.name,0,OD(o.p,.85,2,100),'MVP: '+o.x.p.name,1)}));
+ const names=new Set(),mine=[];
+ ['E','W'].forEach(c=>[...S[c].st,...S[c].rs].forEach(x=>names.add(x.p.name)));
+ const c0=confOf('*'),rank=S[c0].all;
+ state.roster.filter(p=>!p.inj).forEach(p=>{const r=rank.findIndex(x=>x.p===p)+1;if(!r)return;const pr=1/(1+Math.exp((r-12.5)*.45));if(pr>.04&&pr<.97)mine.push({p,r,pr,s:A('asgsel',p.name,0,OD(pr,.93,1.05,60),p.name+' makes the team',p.name)})});
+ const v={map,pE,mu,
+  ml:[A('asgml','E',0,Math.max(1.05,Math.round(.95/pE*100)/100),'East to win'),A('asgml','W',0,Math.max(1.05,Math.round(.95/(1-pE)*100)/100),'West to win')],
+  sp:[A('asgsp','E',line,1.91,'East '+sg(line)),A('asgsp','W',line,1.91,'West '+sg(-line))],
+  ou:[A('asgou','Over',tot,1.91,'total: Over '+tot),A('asgou','Under',tot,1.91,'total: Under '+tot)],
+  mvp,mine:mine.sort((a,b)=>b.pr-a.pr).slice(0,5)};
+ asgMkts.s=sig;return asgMkts.v=v;
+}
+function findSel(key){
+ const k=key.split('|')[0],B=GK.includes(k)?gameMkts():k==='ser'?serMkts():(k==='fut'||k==='conf')?futMkts():asgMkts();
+ return B&&B.map[key]||null;
+}
+
+/* ---------- settlement ---------- */
+function gameSel(s,g){
+ const d=g.home-g.away,tot=g.home+g.away;
+ if(s.kind==='ml')return (s.side==='me')===(d>0)?1:0;
+ if(s.kind==='sp'){const m=s.side==='me'?d+s.line:-d-s.line;return m>0?1:m<0?0:2}
+ if(s.kind==='ou'){const m=tot-s.line;return m===0?2:((m>0)===(s.side==='Over'))?1:0}
+ const p=g.players.find(x=>x.id===s.pid);if(!p||!p.min)return 2;
+ const m=p.pts-s.line;return m===0?2:((m>0)===(s.side==='Over'))?1:0;
+}
+function settleBets(g){
+ let any=0;
+ state.bets.forEach(b=>b.sels.forEach(s=>{if(s.res==null&&GK.includes(s.kind)&&s.gno===g.number){s.res=gameSel(s,g);any=1}}));
+ if(any)resolveBets();
+}
+function settleAsg(){
+ const A=state.asg;if(!A)return;const d=A.e-A.w,tot=A.e+A.w,names=new Set(A.box.map(b=>b.n));
+ state.bets.forEach(b=>b.sels.forEach(s=>{
+  if(s.res!=null)return;
+  if(s.kind==='asgml')s.res=s.side===A.win?1:0;
+  else if(s.kind==='asgsp'){const m=s.side==='E'?d+s.line:-d-s.line;s.res=m>0?1:m<0?0:2}
+  else if(s.kind==='asgou'){const m=tot-s.line;s.res=m===0?2:((m>0)===(s.side==='Over'))?1:0}
+  else if(s.kind==='asgmvp')s.res=s.side===A.mvp?1:0;
+  else if(s.kind==='asgsel')s.res=names.has(s.side)?1:0;
+ }));
+ resolveBets();
+}
+function finBet(b,r,amt){
+ const pay=r===1?amt:r===2?b.stake:0,net=pay-b.stake,S=state.betStats;
+ state.bank+=pay;S.wagered+=b.stake;S.net+=net;
+ if(r===1){S.won++;S.streak=Math.max(0,S.streak)+1;S.best=Math.max(S.best,net)}else if(r===0){S.lost++;S.streak=Math.min(0,S.streak)-1}else S.push++;
+ state.betLog.unshift({label:b.label,stake:b.stake,res:r,net,odds:b.odds,legs:b.sels.length,season:state.season,legsTxt:b.sels.length>1?b.sels.map(s=>s.label).join(' · '):''});
+ state.betLog=state.betLog.slice(0,80);return net;
+}
+function resolveBets(){
+ const keep=[];let net=0,n=0,last=null;
+ state.bets.forEach(b=>{
+  if(b.sels.some(s=>s.res===0)){net+=finBet(b,0);n++;last=0;return}
+  if(b.sels.every(s=>s.res!=null)){
+   const won=b.sels.filter(s=>s.res===1);
+   if(won.length)net+=finBet(b,1,Math.round(b.stake*won.reduce((m,s)=>m*s.odds,1)));else net+=finBet(b,2);
+   n++;last=won.length?1:2;return;
+  }
+  keep.push(b);
+ });
+ state.bets=keep;
+ if(n)toast(n===1?(last===1?'Bet won! +'+net+' coins':last===2?'Bet pushed.':'Bet lost.'):n+' bets settled · net '+(net>0?'+':'')+net+' coins');
+}
+function voidOpen(){state.bets.forEach(b=>{b.sels.forEach(s=>{if(s.res==null)s.res=2});state.bank+=b.stake;state.betLog.unshift({label:b.label,stake:b.stake,res:2,net:0,odds:b.odds,legs:b.sels.length,season:state.season,v:1})});state.bets=[];state.betLog=state.betLog.slice(0,80)}
+
+/* ---------- slip ---------- */
+function pickSel(key){
+ const i=SLIP.indexOf(key);
+ if(i>=0)SLIP.splice(i,1);
+ else{const s=findSel(key);if(!s)return toast('That market is closed.');SLIP=SLIP.filter(k=>{const o=findSel(k);return o&&o.mkt!==s.mkt});SLIP.push(key);BV.open=true}
+ renderBet();
+}
+function setStake(v){state.stake=Math.max(0,Math.floor(Number(v)||0))}
+function chipStake(v){setStake(v==='half'?state.bank/2:v==='max'?state.bank:v);renderBet()}
+function slipCalc(){
+ const sels=SLIP.map(findSel).filter(Boolean),stake=Math.floor(Number(state.stake)||0),par=BV.mode==='parlay'&&sels.length>1;
+ const grp=sels.map(s=>s.grp),dup=par&&new Set(grp).size<grp.length;
+ const cost=par?stake:stake*sels.length,odds=par?sels.reduce((m,s)=>m*s.odds,1):0,pay=par?Math.round(stake*odds):sels.reduce((a,s)=>a+Math.round(stake*s.odds),0);
+ let err='';
+ if(!sels.length)err='';else if(stake<10)err='Minimum stake is 10 coins.';else if(par&&sels.length>8)err='Parlays are limited to 8 legs.';else if(dup)err='Parlay legs must come from different games or markets.';else if(cost>state.bank)err='Not enough coins ('+cost+' needed).';
+ return{sels,stake,par,cost,odds,pay,err};
+}
+function sumHTML(){
+ const c=slipCalc();if(!c.sels.length)return '';
+ return `<div class="sl-sum"><div class="between"><span class="muted">${c.par?c.sels.length+'-leg parlay @ '+fmtO(c.odds):c.sels.length+' bet'+(c.sels.length>1?'s':'')+' × '+c.stake}</span><b>${c.cost} coins</b></div><div class="between"><span class="muted">Potential payout</span><b class="green">${c.pay}</b></div><div class="between"><span class="muted">Profit if it lands</span><b class="green">+${c.pay-c.cost}</b></div>${c.err?`<div class="red" style="margin-top:8px;font-size:11px">${esc(c.err)}</div>`:''}</div>`;
+}
+function stakeInput(v){setStake(v);const el=$('slipSum');if(el)el.innerHTML=sumHTML();const b=$('slipGo');if(b)b.disabled=!!slipCalc().err}
+function setMode(m){BV.mode=m;renderBet()}
+function toggleSlip(){BV.open=!BV.open;const e=$('slip');if(e)e.classList.toggle('open',BV.open)}
+function clearSlip(){SLIP=[];renderBet()}
+function placeSlip(){
+ const c=slipCalc();if(!c.sels.length)return;if(c.err)return toast(c.err);
+ if(!c.par){const d=c.sels.find(s=>state.bets.some(b=>b.type==='single'&&b.sels[0].mkt===s.mkt));if(d)return toast('You already have a bet on: '+d.label)}
+ const mkB=(ss,stake,type,odds)=>({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),type,stake,odds,season:state.season,label:type==='parlay'?ss.length+'-leg parlay':ss[0].label,
+  sels:ss.map(s=>({kind:s.kind,mkt:s.mkt,gno:s.gno,sid:s.sid,cf:s.cf,pid:s.pid,side:s.side,line:s.line,odds:s.odds,label:s.label,sub:s.sub||'',grp:s.grp,res:null}))});
+ if(c.par)state.bets.push(mkB(c.sels,c.stake,'parlay',Math.round(c.odds*100)/100));else c.sels.forEach(s=>state.bets.push(mkB([s],c.stake,'single',s.odds)));
+ state.bank-=c.cost;SLIP=[];BV.open=false;
+ save();toast(c.par?'Parlay placed: '+c.sels.length+' legs':c.sels.length>1?c.sels.length+' bets placed':'Bet placed: '+c.sels[0].label);
+}
+function canCancel(b){
+ return b.sels.every(s=>{
+  if(s.res!=null)return false;
+  if(GK.includes(s.kind))return !(state.current&&!state.current.done&&state.current.number===s.gno)&&!state.history.some(h=>h.number===s.gno)&&s.gno>state.played-(s.gno>82?1e9:0);
+  if(s.kind==='ser'){const m=state.post&&state.post.m&&state.post.m.find(x=>x.sid===s.sid);return !!m&&!m.done&&m.wa+m.wb===0}
+  if(s.kind==='fut'||s.kind==='conf')return !state.post;
+  return state.played<41&&!(state.asg&&state.asg.season===state.season);
+ });
+}
+function cancelBet(id){
+ const i=state.bets.findIndex(b=>b.id===id);if(i<0)return;const b=state.bets[i];
+ if(!canCancel(b))return toast('That bet is locked in.');
+ state.bank+=b.stake;state.bets.splice(i,1);save();toast('Bet cancelled. Stake refunded.');
+}
+
+/* ---------- UI ---------- */
+const OB=(s,txt)=>`<button class="odd ${SLIP.includes(s.key)?'on':''}" data-k="${esc(s.key)}"><small>${esc(txt)}</small><b>${fmtO(s.odds)}</b></button>`;
+function gameCard(G){
+ const g=G.g,L=G.L,pm=Math.round(L.p*100);
+ return `<div class="card gc"><div class="between"><div><div class="topline">${g.post?esc(g.label):'GAME '+String(g.number).padStart(2,'0')+' · '+(G.home?'HOME':'ROAD')}</div><h3 style="font-size:16px;margin:5px 0 0">${esc(state.team.name)} <span class="muted">${G.home?'vs':'@'}</span> ${esc(g.opponent)}</h3></div><div class="sub" style="text-align:right">OVR ${teamRating()} · ${g.rating}</div></div>
+ <div class="pbar"><i style="width:${pm}%"></i></div><div class="between sub" style="margin-bottom:12px"><span>${esc(sn('*'))} ${pm}%</span><span>${100-pm}% ${esc(sn(g.opponent))}</span></div>
+ <div class="mk3"><div><label>MONEYLINE</label>${OB(G.ml[0],sn('*'))}${OB(G.ml[1],sn(g.opponent))}</div>
+ <div><label>SPREAD</label>${OB(G.sp[0],sn('*')+' '+sg(L.sp))}${OB(G.sp[1],sn(g.opponent)+' '+sg(-L.sp))}</div>
+ <div><label>TOTAL</label>${OB(G.ou[0],'O '+L.tot)}${OB(G.ou[1],'U '+L.tot)}</div></div>
+ ${G.pp.length?`<details class="props" ${BV.props?'open':''} ontoggle="BV.props=this.open"><summary>PLAYER PROPS · POINTS</summary>${G.pp.map(x=>`<div class="prow"><span><b>${esc(x.p.name)}</b><small class="muted"> proj ${f1(x.mu)}</small></span><div class="pr2">${OB(x.o,'O '+x.line)}${OB(x.u,'U '+x.line)}</div></div>`).join('')}</details>`:''}</div>`;
+}
+function gamesTab(){
+ const L=gameMkts().list;
+ if(!L.length)return `<div class="card empty">${state.played>=82?(state.post?(state.post.champ?'The postseason is over.':'No game of yours is left to bet on. Check series and futures.'):'Loading postseason…'):'No games to bet on right now.'}</div>`;
+ return `<div class="grid">${L.map(gameCard).join('')}</div>`;
+}
+function poTab(){
+ const P=state.post;
+ if(!P||!P.v2)return `<div class="card empty">Playoff betting opens when the regular season ends.<br>Bet on the championship and conference winners now in <b>Futures</b>.<br><br><button class="btn sm" onclick="BV.tab='fut';renderBet()">GO TO FUTURES</button></div>`;
+ const S=serMkts().list;
+ if(!S.length)return '<div class="card empty">No open series. '+(P.champ?'The postseason is over.':'')+'</div>';
+ return `<div class="section-head" style="margin-top:0"><h2>${RN[P.round]}</h2><span class="sub">SERIES WINNER · PRICES MOVE WITH THE SCORE</span></div><div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(290px,1fr))">${S.map(x=>`<div class="card gc ${x.m.a==='*'||x.m.b==='*'?'mine':''}"><div class="between"><span class="topline">${x.m.conf?`<span class="cf ${x.m.conf}">${x.m.conf}</span> `:''}${RNS[x.m.rd].toUpperCase()}</span><span class="pill">${esc(seriesLine(x.m))}</span></div><div class="mk2" style="margin-top:12px">${OB(x.A,nm(x.m.a))}${OB(x.B,nm(x.m.b))}</div></div>`).join('')}</div>`
+ +(gameMkts().list.length?'<p class="sub" style="margin-top:12px">Your next playoff game (moneyline, spread, total, props) is on the <b>Games</b> tab.</p>':'');
+}
+function futTab(){
+ const F=futMkts();
+ if(F.closed)return '<div class="card empty">The season is over. Futures reopen next season.</div>';
+ const rows=(L,n)=>L.slice(0,n).map(s=>`<div class="frow ${s.side==='*'?'mine':''}"><span><b>${esc(nm(s.side))}</b> ${cfDot(s.side)}</span><span class="muted">${(s.p*100).toFixed(1)}%</span>${OB(s,'')}</div>`).join('');
+ const card=(t,sub,L,n)=>`<div class="card"><div class="section-head"><h3 style="margin:0">${t}</h3><span class="sub">${sub}</span></div>${L.length?rows(L,n):'<div class="empty" style="padding:14px">Decided.</div>'}</div>`;
+ return `<p class="sub" style="margin:0 0 12px">Odds come from a 300-run simulation of the bracket and update as the season goes. One bet per market, and bets on teams that get eliminated lose right away.</p><div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">${card('Championship','WINNER',F.champ,BV.allFut?30:10)}${card('East champion','CONFERENCE',F.E,BV.allFut?15:6)}${card('West champion','CONFERENCE',F.W,BV.allFut?15:6)}</div><div style="text-align:center;margin-top:12px"><button class="btn sm" onclick="BV.allFut=!BV.allFut;renderBet()">${BV.allFut?'SHOW FEWER':'SHOW ALL TEAMS'}</button></div>`;
+}
+function asgTab(){
+ const A=asgMkts();
+ if(!A){const R=state.asg&&state.asg.season===state.season?state.asg:null;return `<div class="card empty">${R?`The All-Star Game is over: East ${R.e} – West ${R.w}. MVP: <b>${esc(R.mvp)}</b>.<br>Betting returns next season.`:'All-Star betting closes at game 41.'}<br><br><button class="btn sm" onclick="SV.tab='allstar';navigate('stats')">VIEW ALL-STAR PAGE</button></div>`}
+ const left=41-state.played;
+ return `<div class="card asg-hero" style="margin-bottom:14px"><div class="between"><div><div class="topline">ALL-STAR GAME · EAST vs WEST</div><h2 style="margin:5px 0">Tips off after game 41</h2><span class="sub">${left} game${left===1?'':'s'} left to bet. Rosters are still projected and can change.</span></div><button class="btn sm" onclick="SV.tab='allstar';navigate('stats')">SEE ROSTERS</button></div></div>
+ <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+ <div class="card gc"><div class="topline">GAME MARKETS</div><div class="pbar"><i style="width:${Math.round(A.pE*100)}%"></i></div><div class="between sub" style="margin-bottom:12px"><span>East ${Math.round(A.pE*100)}%</span><span>${100-Math.round(A.pE*100)}% West</span></div>
+ <div class="mk3"><div><label>WINNER</label>${OB(A.ml[0],'East')}${OB(A.ml[1],'West')}</div><div><label>SPREAD</label>${OB(A.sp[0],'East '+sg(A.sp[0].line))}${OB(A.sp[1],'West '+sg(-A.sp[0].line))}</div><div><label>TOTAL</label>${OB(A.ou[0],'O '+A.ou[0].line)}${OB(A.ou[1],'U '+A.ou[1].line)}</div></div></div>
+ <div class="card"><div class="section-head"><h3 style="margin:0">All-Star MVP</h3><span class="sub">TOP 10</span></div>${A.mvp.map(o=>`<div class="frow"><span><b>${esc(o.x.p.name)}</b> <small class="muted">${esc(tabbr(o.x.k))}</small></span><span class="muted">${(o.p*100).toFixed(1)}%</span>${OB(o.s,'')}</div>`).join('')}</div>
+ ${A.mine.length?`<div class="card"><div class="section-head"><h3 style="margin:0">Your players</h3><span class="sub">MAKE THE TEAM</span></div>${A.mine.map(o=>`<div class="frow mine"><span><b>${esc(o.p.name)}</b> <small class="muted">#${o.r} in ${CN[confOf('*')]}</small></span><span class="muted">${(o.pr*100).toFixed(0)}%</span>${OB(o.s,'')}</div>`).join('')}</div>`:''}</div>`;
+}
+function betRowLegs(b){return b.sels.map(s=>`<div class="leg"><span class="${s.res===1?'green':s.res===0?'red':'muted'}">${s.res===1?'✓':s.res===0?'✗':s.res===2?'–':'●'}</span> ${esc(s.label)} <small class="muted">${fmtO(s.odds)}</small></div>`).join('')}
+function myTab(){
+ const S=state.betStats,open=state.bets,roi=S.wagered?S.net/S.wagered*100:0,tot=S.won+S.lost;
+ const H=state.betLog.filter(x=>BV.hist==='all'||(BV.hist==='won'&&x.res===1)||(BV.hist==='lost'&&x.res===0));
+ const F=(k,l)=>`<button class="tb sm ${BV.hist===k?'on':''}" onclick="BV.hist='${k}';renderBet()">${l}</button>`;
+ return `<div class="grid stats-grid"><div class="card metric"><small>RECORD</small><strong>${S.won}–${S.lost}${S.push?'–'+S.push:''}</strong><p>${tot?Math.round(S.won/tot*100)+'% win rate':'no settled bets'}</p></div><div class="card metric"><small>ROI</small><strong class="${roi>0?'green':roi<0?'red':''}">${roi>0?'+':''}${roi.toFixed(1)}%</strong><p>${S.wagered} coins wagered</p></div><div class="card metric"><small>BEST WIN</small><strong class="green">+${S.best}</strong><p>single bet</p></div><div class="card metric"><small>STREAK</small><strong class="${S.streak<0?'red':'green'}">${S.streak>0?'W':S.streak<0?'L':''}${Math.abs(S.streak)}</strong><p>settled bets</p></div></div>
+ <div class="section card"><div class="section-head"><h2>Open bets</h2><span class="pill">${open.length}</span></div>${open.length?open.map(b=>`<div class="obet"><div class="between"><b>${b.type==='parlay'?'🔗 ':''}${esc(b.label)}</b><span class="green"><b>${Math.round(b.stake*(b.type==='parlay'?b.sels.reduce((m,s)=>m*s.odds,1):b.odds))}</b> <small class="muted">to win</small></span></div>${betRowLegs(b)}<div class="between" style="margin-top:8px"><span class="sub">Stake ${b.stake} · ${fmtO(b.odds)}</span>${canCancel(b)?`<button class="btn sm danger" onclick="cancelBet('${b.id}')">CANCEL &amp; REFUND</button>`:'<span class="pill">LOCKED</span>'}</div></div>`).join(''):'<div class="empty">No open bets. Add picks to the slip to get started.</div>'}</div>
+ <div class="section card"><div class="section-head"><h2>Bet history</h2><div class="row">${F('all','ALL')}${F('won','WON')}${F('lost','LOST')}</div></div>${H.length?tbl(['BET','STAKE','ODDS','RESULT'],H.map(b=>`<tr><td>${esc(b.label)}${b.legsTxt?`<div class="sub">${esc(b.legsTxt)}</div>`:''}</td><td>${b.stake}</td><td>${b.odds?fmtO(b.odds):'–'}</td><td class="${b.res===1?'green':b.res===0?'red':''}"><b>${b.v?'VOID':b.res===1?'WON +'+b.net:b.res===2?'PUSH':'LOST '+b.net}</b></td></tr>`).join('')):'<div class="empty">Nothing here yet.</div>'}</div>`;
+}
+function slipHTML(){
+ const c=slipCalc(),chips=[10,25,50,100,250].map(v=>`<button class="tb sm ${c.stake===v?'on':''}" onclick="chipStake(${v})">${v}</button>`).join('')+`<button class="tb sm" onclick="chipStake('half')">½</button><button class="tb sm" onclick="chipStake('max')">MAX</button>`;
+ return `<div class="slip-h" onclick="toggleSlip()"><span>🎟 BET SLIP</span><span class="pill">${c.sels.length}</span><span class="sl-tot">${c.sels.length?'to win '+c.pay:''}</span></div><div class="slip-b">`
+ +(c.sels.length?`<div class="seg"><button class="${BV.mode==='single'?'on':''}" onclick="setMode('single')">SINGLES</button><button class="${BV.mode==='parlay'?'on':''}" onclick="setMode('parlay')" ${c.sels.length<2?'title="Add 2+ picks"':''}>PARLAY</button></div>
+  ${c.sels.map(s=>`<div class="sl-item"><div><b>${esc(s.label)}</b><small class="muted">${esc(s.sub||'')}</small></div><div class="sl-r"><b class="green">${fmtO(s.odds)}</b><button class="x" onclick="pickSel(this.dataset.k)" data-k="${esc(s.key)}" aria-label="Remove">×</button></div></div>`).join('')}
+  <label style="margin-top:12px">${BV.mode==='parlay'&&c.sels.length>1?'STAKE':'STAKE PER BET'} (MIN 10)</label><input type="number" min="10" value="${c.stake||''}" oninput="stakeInput(this.value)"><div class="chips2">${chips}</div>
+  <div id="slipSum">${sumHTML()}</div><div class="row" style="margin-top:12px"><button id="slipGo" class="btn success" style="flex:1" onclick="placeSlip()" ${c.err?'disabled':''}>PLACE BET${c.sels.length>1&&BV.mode==='single'?'S':''}</button><button class="btn" onclick="clearSlip()">CLEAR</button></div>`
+ :'<div class="empty" style="padding:22px 8px">Tap any odds to add a pick.<br><small class="muted">Combine picks from different games into a parlay for a bigger payout.</small></div>')+'</div>';
+}
+function renderBet(){
+ const el=$('betBody');if(!el||!state.picked||!$('bet').classList.contains('active'))return;
+ SLIP=SLIP.filter(k=>findSel(k));
+ const S=state.betStats,risk=state.bets.reduce((a,b)=>a+b.stake,0),T=(k,l,n)=>`<button class="tb ${BV.tab===k?'on':''}" onclick="BV.tab='${k}';renderBet()">${l}${n?` <span class="ct">${n}</span>`:''}</button>`;
+ const P=state.post,live=P&&P.v2&&!P.champ,asgOpen=state.played<41&&!(state.asg&&state.asg.season===state.season);
+ const body=BV.tab==='games'?gamesTab():BV.tab==='po'?poTab():BV.tab==='fut'?futTab():BV.tab==='asg'?asgTab():myTab();
+ el.innerHTML=`<div class="section grid stats-grid"><div class="card metric"><small>BANKROLL</small><strong class="green">${state.bank}</strong><p>coins</p></div><div class="card metric"><small>NET PROFIT</small><strong class="${S.net>0?'green':S.net<0?'red':''}">${S.net>0?'+':''}${S.net}</strong><p>all time</p></div><div class="card metric"><small>OPEN BETS</small><strong>${state.bets.length}</strong><p>${risk} coins at risk</p></div><div class="card"><label>ODDS FORMAT</label><div class="seg"><button class="${state.oddsFmt!=='am'?'on':''}" onclick="state.oddsFmt='dec';renderBet()">DECIMAL</button><button class="${state.oddsFmt==='am'?'on':''}" onclick="state.oddsFmt='am';renderBet()">AMERICAN</button></div>${state.bank<10&&!state.bets.length?'<button class="btn success sm" style="margin-top:10px;width:100%" onclick="state.bank=500;save()">GET 500 COINS</button>':''}</div></div>
+ <div class="tbar">${T('games','GAMES')}${T('po','PLAYOFFS'+(live?' ●':''))}${T('fut','FUTURES')}${T('asg','ALL-STAR'+(asgOpen?' ★':''))}${T('my','MY BETS',state.bets.length)}</div>
+ <div class="bk-layout"><div class="bk-main">${body}</div><div class="bk-slip ${BV.open?'open':''}" id="slip">${slipHTML()}</div></div>`;
+ el.onclick=e=>{const b=e.target.closest('.odd[data-k]');if(b)pickSel(b.dataset.k)};
+}
+
+function newSeason(){
+ ask('Start a new season? Players age and develop, and the record and history reset.',newSeason2);
+}
+function newSeason2(){
+ state.seasons.unshift({season:state.season,w:state.wins,l:state.losses,champ:state.post?.champ?nm(state.post.champ):'—',you:state.post?.champ==='*'});state.pstats={};voidOpen();state.lp={};state.lt={};state.asg=null;state.season++;state.wins=0;state.losses=0;state.played=0;state.streak=0;
+ state.pointsFor=0;state.pointsAgainst=0;state.current=null;state.history=[];state.post=null;
+ progress();resetStandings();generateSchedule();save();navigate('dashboard');toast('New season started. See the offseason report on the Stats page.');
+}
+function resetAll(){
+ ask('This permanently resets your franchise and saved game history. Continue?',resetAll2);
+}
+function resetAll2(){
+ state=initialState();generateSchedule();resetStandings();save();navigate('dashboard');toast('Franchise reset.');
+}
+function ensure(){if(!state.schedule?.length)generateSchedule();if(!state.strengths||!state.standings?.length||state.standings.length!==others().length||state.standings.some(t=>t.w+t.l>state.played))resetStandings()}
+function applyLoaded(o){state=norm(o);ensure();document.documentElement.style.setProperty('--purple',state.team.color||'#a78bfa');try{localStorage.setItem('franchiseSave',JSON.stringify(state))}catch(e){}render()}
+function lbStats(){
+ const S=state.seasons||[];let w=state.wins||0,l=state.losses||0,best=state.wins||0,titles=state.post?.champ==='*'?1:0;
+ S.forEach(x=>{w+=x.w||0;l+=x.l||0;if((x.w||0)>best)best=x.w;if(x.you||(x.you===undefined&&x.champ===state.team.name))titles++});
+ const g=w+l,n=v=>Math.max(0,Math.round(+v||0));
+ return{team:String(state.team.name||'').slice(0,30),abbr:String(state.team.abbr||'').slice(0,6),color:/^#[0-9a-f]{6}$/i.test(state.team.color)?state.team.color.toLowerCase():'#a78bfa',seasons:S.length,titles:Math.min(titles,S.length+1),wins:n(w),losses:n(l),best:Math.min(82,n(best)),pct:g>=82?n(w/g*1000):0,ovr:Math.min(99,n(teamRating())),bank:Math.min(1e9,n(state.bank)),season:Math.max(1,n(state.season))}
+}
+window.FR={get:()=>state,set:o=>applyLoaded(o),stats:lbStats};
+render();
+if(location.hash&&$(location.hash.slice(1))?.classList.contains('page'))navigate(location.hash.slice(1));
+document.documentElement.style.setProperty('--purple',state.team.color||'#a78bfa');
+</script>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import{getAuth,onAuthStateChanged,signInWithPopup,GoogleAuthProvider,signInAnonymously,signOut,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import{getFirestore,doc,collection,query,where,orderBy,limit,onSnapshot,runTransaction,getDoc,setDoc,getCountFromServer}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyDfRiV8Gl2uslFZtBFc0i2Xw2DyIosZEP0",
+  authDomain: "project-5592087542610272509.firebaseapp.com",
+  projectId: "project-5592087542610272509",
+  storageBucket: "project-5592087542610272509.firebasestorage.app",
+  messagingSenderId: "681903533252",
+  appId: "1:681903533252:web:40fea163cf2c8aec75ed91",
+  measurementId: "G-J07W6F6Y02"
+};
+const root=document.getElementById('online'),$=id=>document.getElementById(id),H=3600e3;
+const e=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const T=m=>window.toast?window.toast(m):alert(m);
+const head=()=>'<div class="topline">MULTIPLAYER</div><h1>Online <span>betting.</span></h1><p class="sub">Virtual coins only, no real money. A new matchday every 3 minutes: build a slip, chase parlays, keep your win streak alive.</p>';
+const ERR={'auth/invalid-credential':'Wrong email or password','auth/user-not-found':'Wrong email or password','auth/wrong-password':'Wrong email or password','auth/email-already-in-use':'That email already has an account. Log in instead.','auth/weak-password':'Password must be at least 6 characters','auth/invalid-email':'Enter a valid email address','auth/missing-password':'Enter your password','auth/popup-closed-by-user':'Sign-in cancelled','auth/too-many-requests':'Too many attempts. Try again in a few minutes.'};
+/* ---- shared schedule: every client computes the same games, odds, scores and quarters from the matchday number ---- */
+const TM=typeof BASE!=='undefined'?BASE:{},NAMES=Object.keys(TM).sort(),L=180e3,OPEN=100e3,LIVE=70e3;
+const mul=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const wp=m=>1/(1+Math.exp(-m/6.3)),sn=n=>n.split(' ').pop(),sg=n=>(n>0?'+':'')+n,slotOf=ms=>Math.floor(ms/L);
+const cache={};
+function games(k){
+ if(cache[k])return cache[k];
+ const R=mul(k*7919+13),ts=[...NAMES];for(let i=ts.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[ts[i],ts[j]]=[ts[j],ts[i]]}
+ const nrm=()=>(R()+R()+R()+R()-2)*1.73,od=q=>Math.max(1.05,Math.round(.95/q*100)/100);
+ const split=tot=>{const w=[0,0,0,0].map(()=>.8+R()*.4),s=w[0]+w[1]+w[2]+w[3],q=w.map(x=>Math.round(tot*x/s));q[3]=tot-q[0]-q[1]-q[2];return q};
+ return cache[k]=Array.from({length:8},(_,i)=>{
+  const h=ts[2*i],w=ts[2*i+1],mu=((TM[h]||70)-(TM[w]||70))*.5+3.6,p=wp(mu),tot=Math.round((206+R()*16)*2)/2;
+  let M=Math.round(mu+nrm()*11),Tt=Math.round(tot+nrm()*12);if(!M)M=1;if((Tt+M)%2)Tt++;
+  const Hs=(Tt+M)/2,As=(Tt-M)/2;
+  return{h,w,tot,ml:[od(p),od(1-p)],sp:-Math.round(mu*2)/2,H:Hs,A:As,qH:split(Hs),qA:split(As)}})}
+const legsOf=b=>b.legs||[{gi:b.gi,kind:b.kind,side:b.side,line:b.line,odds:b.odds}];
+function gradeLeg(slot,l){const g=games(slot)[l.gi];let d;
+ if(l.kind==='ml')d=l.side==='H'?g.H-g.A:g.A-g.H;
+ else if(l.kind==='sp')d=l.side==='H'?g.H+l.line-g.A:g.A-l.line-g.H;
+ else d=l.side==='O'?g.H+g.A-l.line:l.line-g.H-g.A;
+ return d>0?1:d<0?0:2}
+function gradeBet(b){
+ const rs=legsOf(b).map(l=>({l,r:gradeLeg(b.slot,l)}));
+ if(rs.some(x=>x.r===0))return{st:'lost',pay:0};
+ const w=rs.filter(x=>x.r===1);if(!w.length)return{st:'push',pay:b.stake};
+ return{st:'won',pay:Math.round(b.stake*w.reduce((a,x)=>a*x.l.odds,1))}}
+function liveScore(g,x){
+ const QL=LIVE/4,qi=Math.max(0,Math.min(3,Math.floor(x/QL))),f=Math.max(0,Math.min(1,(x-qi*QL)/QL)),sum=(a,n)=>a.slice(0,n).reduce((p,c)=>p+c,0);
+ return{q:qi+1,f,done:qi,H:sum(g.qH,qi)+Math.round(g.qH[qi]*f),A:sum(g.qA,qi)+Math.round(g.qA[qi]*f)}}
+const phaseOf=t=>t<OPEN?'open':t<OPEN+LIVE?'live':'final',mmss=ms=>{const s=Math.max(0,Math.ceil(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+const ago=ms=>{const s=Math.max(0,Math.floor((Date.now()-ms)/1000));return s<60?s+'s':s<3600?Math.floor(s/60)+'m':Math.floor(s/3600)+'h'};
+
+if(/^PASTE/.test(firebaseConfig.apiKey))root.innerHTML=head()+'<div class="section card">Add your Firebase keys to the top of the online script in index.html.</div>';
+else start();
+
+function start(){
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+let uid=null,me=null,subs=[],bets=[],feed=[],lastKey='',gameCfg={},slip=[],slipSlot=null,lbMode='coins',topOff=null;const busy=new Set();
+const run=f=>f().catch(x=>T(ERR[x.code]||x.message||String(x))),uref=u=>doc(db,'users',u);
+
+const sref=u=>doc(db,'saves',u),lref=u=>doc(db,'leaderboard',u),FR=()=>window.FR;
+const LS=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);v===null?localStorage.removeItem(k):localStorage.setItem(k,String(v))}catch(x){return null}};
+const DEV=LS('franchiseDev')||(()=>{const d=Math.random().toString(36).slice(2,10);LS('franchiseDev',d);return d})();
+let offline=false,cloudReady=false,booting=false,conflictOpen=false,baseAt=0,timer=null,pushing=false,again=false,lastLb='',lbAt=0,lbTimer=null,saveOff=null,boardOff=null,curBoard='titles';
+const gate=document.createElement('div');gate.style.cssText='position:fixed;inset:0;z-index:95;background:var(--bg);overflow:auto;padding:20px;display:none';document.body.appendChild(gate);
+const dirty=()=>(+LS('franchiseAt')||0)>(+LS('franchiseSynced')||0);
+const hasProgress=s=>!!(s&&(s.picked||s.played>0||s.season>1));
+const desc=s=>e(s.team?.name||'Unnamed')+' · Season '+(s.season||1)+' · '+(s.wins||0)+'-'+(s.losses||0);
+const showGate=h=>{gate.style.display='block';gate.innerHTML='<div style="max-width:460px;margin:5vh auto 0">'+h+'</div>'};
+const hideGate=()=>{gate.style.display='none';gate.innerHTML=''};
+const ghead=t=>'<div class="logo" style="margin-bottom:18px">FRANCHISE<span>.</span></div><div class="topline">ACCOUNT</div><h1>'+t+'</h1>';
+const loginHTML=()=>`<div class="section card" style="max-width:420px"><div class="field"><label>EMAIL</label><input id="olEmail" type="email" autocomplete="email"></div>
+ <div class="field" style="margin-top:12px"><label>PASSWORD</label><input id="olPass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')OL.login()"></div>
+ <div class="row" style="margin-top:14px"><button class="btn primary" onclick="OL.login()">LOG IN</button><button class="btn" onclick="OL.signup()">CREATE ACCOUNT</button></div>
+ <p class="sub" style="margin:12px 0"><a href="#online" style="color:var(--purple)" onclick="OL.reset();return false">Forgot password?</a></p>
+ <div class="row"><button class="btn" onclick="OL.google()">CONTINUE WITH GOOGLE</button><button class="btn" onclick="OL.guest()">PLAY AS GUEST</button></div>
+ <p class="sub" style="margin-top:10px">Guests lose their save if the browser data is cleared. Create an account to keep it forever.</p></div>`;
+const nameHTML=()=>'<div class="section card" style="max-width:420px"><label>CHOOSE A PLAYER NAME (3-16 letters, numbers, _)</label><input id="olName" maxlength="16" onkeydown="if(event.key===\'Enter\')OL.name()"><div class="row" style="margin-top:12px"><button class="btn primary" onclick="OL.name()">CREATE PLAYER (500 COINS)</button><button class="btn" onclick="OL.out()">SIGN OUT</button></div></div>';
+function authView(){
+ setBadge('off');
+ if(offline){hideGate();root.innerHTML=head()+loginHTML()}
+ else{showGate(ghead('Sign <span>in.</span>')+'<p class="sub">Your whole franchise (roster, seasons, trades, bets) is saved to your account and follows you to any device.</p>'+loginHTML()+'<p class="sub" style="margin-top:14px"><a href="#" style="color:var(--purple)" onclick="OL.offline();return false">Play offline without an account (no cloud save)</a></p>');root.innerHTML=head()+'<div class="section card sub">Sign in to play online.</div>'}
+ if($('leaders')?.classList.contains('active'))openBoards();
+}
+function choose(msg,aL,bL){return new Promise(res=>{const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;z-index:120;padding:20px';
+ d.innerHTML='<div class="card" style="max-width:430px"><p style="margin:0 0 16px;font-size:13px;line-height:1.7">'+msg+'</p><div class="row"><button class="btn success" id="chA">'+aL+'</button><button class="btn danger" id="chB">'+bL+'</button></div></div>';
+ document.body.appendChild(d);d.querySelector('#chA').onclick=()=>{d.remove();res('a')};d.querySelector('#chB').onclick=()=>{d.remove();res('b')}})}
+function setBadge(k){
+ const b=$('cloudBadge'),n=$('cloudNote');
+ const M={off:['● LOCAL SAVE','var(--muted)','Playing without an account. Progress is only stored in this browser. Sign in from the Online tab to save it to your account.'],
+  loading:['☁ LOADING…','var(--muted)','Loading your franchise…'],saving:['☁ SAVING…','var(--purple)','Saving to your account…'],
+  ok:['☁ SAVED','var(--green)','Your whole franchise is saved to your account'+(me?' ('+me.name+')':'')+' and follows you to any device. Last sync '+new Date().toLocaleTimeString()+'.'],
+  error:['⚠ SYNC ERROR','var(--red)','Could not reach the cloud. Your game is still saved in this browser and will sync automatically.']}[k]||[];
+ if(b){b.textContent=M[0];b.style.color=M[1]}if(n)n.textContent=M[2];
+}
+const b64=u=>{let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
+async function pack(j){
+ if(j.length>150000&&typeof CompressionStream!=='undefined'){const r=await new Response(new Blob([j]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer();return{enc:'gz',data:b64(new Uint8Array(r))}}
+ return{enc:'raw',data:j}}
+async function unpack(c){
+ if(c.enc==='gz'){const u=Uint8Array.from(atob(c.data),x=>x.charCodeAt(0));return JSON.parse(await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text())}
+ return JSON.parse(c.data)}
+function adopt(cs,at){FR().set(cs);LS('franchiseAt',at);LS('franchiseSynced',at);LS('franchiseBase',at);LS('franchiseOwner',uid);baseAt=at;T('Loaded your saved franchise')}
+async function bootCloud(){
+ const my=uid;if(booting)return;booting=true;cloudReady=false;setBadge('loading');
+ try{
+  const snap=await getDoc(sref(my));if(uid!==my)return;
+  const loc=FR().get(),own=LS('franchiseOwner'),base=+LS('franchiseBase')||0;let needPush=false;
+  if(snap.exists()){
+   const c=snap.data(),cs=await unpack(c),ask=()=>choose('This account already has a saved franchise:<br><b>'+desc(cs)+'</b><br><br>This device has a different game in progress:<br><b>'+desc(loc)+'</b>','LOAD ACCOUNT SAVE','REPLACE IT WITH THIS DEVICE');
+   const keepLocal=()=>{LS('franchiseBase',c.at);needPush=true};
+   if(own===my){
+    if(c.at===base)needPush=dirty();
+    else if(!dirty())adopt(cs,c.at);
+    else(await choose('Your franchise was saved from another device after you last synced.<br><br><b>Cloud:</b> '+desc(cs)+'<br><b>This device:</b> '+desc(loc),'LOAD CLOUD SAVE','KEEP THIS DEVICE'))==='a'?adopt(cs,c.at):keepLocal();
+   }else if(own===null&&hasProgress(loc))(await ask())==='a'?adopt(cs,c.at):keepLocal();
+   else adopt(cs,c.at);
+  }else{if(own&&own!==my)FR().set(null);needPush=true}
+  baseAt=+LS('franchiseBase')||0;LS('franchiseOwner',my);cloudReady=true;watchSave(my);
+  if(needPush){if(own!==my||!snap.exists())LS('franchiseAt',Math.max(+LS('franchiseAt')||0,1));await push(true)}else{setBadge('ok');pushBoard(true)}
+ }catch(x){console.error(x);setBadge('error')}
+ finally{booting=false;if(uid===my){hideGate();if($('leaders')?.classList.contains('active'))openBoards()}}
+}
+function watchSave(my){
+ if(saveOff)saveOff();
+ saveOff=onSnapshot(sref(my),s=>{
+  if(!cloudReady||!s.exists()||s.metadata.hasPendingWrites)return;const c=s.data();if(c.dev===DEV||c.at===baseAt)return;
+  if(dirty()){cloudReady=false;conflictFlow()}else unpack(c).then(cs=>{adopt(cs,c.at);setBadge('ok')}).catch(()=>{})},()=>{});
+}
+async function conflictFlow(){
+ if(conflictOpen)return;conflictOpen=true;
+ try{const snap=await getDoc(sref(uid)),c=snap.data(),cs=await unpack(c);
+  const r=await choose('This franchise was saved from another device after you last synced.<br><br><b>Cloud:</b> '+desc(cs)+'<br><b>This device:</b> '+desc(FR().get()),'LOAD CLOUD SAVE','KEEP THIS DEVICE');
+  if(r==='a'){adopt(cs,c.at);cloudReady=true;setBadge('ok')}else{baseAt=c.at;LS('franchiseBase',c.at);cloudReady=true;push(true)}
+ }catch(x){setBadge('error')}finally{conflictOpen=false}
+}
+async function push(force){
+ if(!cloudReady||!uid)return;if(pushing){again=true;return}
+ clearTimeout(timer);pushing=true;setBadge('saving');
+ try{
+  const snapAt=+LS('franchiseAt')||0,pk=await pack(JSON.stringify(FR().get(),(k,v)=>k==='view'?undefined:v)),at=Date.now();
+  await runTransaction(db,async t=>{const r=sref(uid),s=await t.get(r);
+   if(s.exists()&&s.data().at!==baseAt&&s.data().dev!==DEV){const x=new Error('conflict');x.conflict=1;throw x}
+   t.set(r,{data:pk.data,enc:pk.enc,at,dev:DEV,v:1})});
+  baseAt=at;LS('franchiseBase',at);LS('franchiseSynced',snapAt);LS('franchiseOwner',uid);setBadge('ok');pushBoard(force);
+ }catch(x){
+  if(x.conflict){cloudReady=false;conflictFlow()}else{console.error(x);setBadge('error');clearTimeout(timer);timer=setTimeout(()=>push(),20000)}
+ }finally{pushing=false;if(again){again=false;if(cloudReady)Cloud.touch()}}
+}
+async function pushBoard(force){
+ clearTimeout(lbTimer);if(!me||!uid)return;
+ const st=FR().stats(),key=JSON.stringify(st);if(key===lastLb)return;
+ const wait=20000-(Date.now()-lbAt);if(!force&&wait>0){lbTimer=setTimeout(()=>pushBoard(),wait+50);return}
+ try{await setDoc(lref(uid),{name:me.name,...st,at:Date.now()});lastLb=key;lbAt=Date.now()}catch(x){console.warn('leaderboard',x.code||x)}
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&cloudReady&&dirty())push(true)});
+window.addEventListener('online',()=>{if(!uid)return;if(!cloudReady)bootCloud();else if(dirty())push()});
+
+/* ---- leaderboards ---- */
+const BOARDS=[['titles','Titles','lb',v=>v+' 🏆'],['wins','Career wins','lb',v=>v],['pct','Win %','lb',v=>v?(v/1000).toFixed(3).replace(/^0/,''):'–'],['best','Best season','lb',v=>v+' W'],['ovr','Team OVR','lb',v=>v],['bank','Sportsbook bank','lb',v=>(+v).toLocaleString()],
+ ['coins','Online coins','users',v=>(+v).toLocaleString()],['profit','Betting profit','users',v=>(v>0?'+':'')+v],['streak','Win streak','users',v=>v+' 🔥']];
+function boardTabs(){const t=$('lbTabs');if(!t)return;const g=(l,a)=>'<div class="topline" style="margin:16px 0 8px">'+l+'</div><div class="row">'+BOARDS.filter(b=>b[2]===a).map(b=>'<button class="btn sm '+(b[0]===curBoard?'primary':'')+'" onclick="Cloud.board(\''+b[0]+'\')">'+b[1].toUpperCase()+'</button>').join('')+'</div>';t.innerHTML=g('Franchise','lb')+g('Online betting','users')}
+function closeBoards(){if(boardOff){boardOff();boardOff=null}}
+function openBoards(){
+ closeBoards();boardTabs();const body=$('lbBody'),me2=$('lbMe');if(!body)return;me2.innerHTML='';
+ if(!uid){body.innerHTML='<div class="empty">Sign in to see the leaderboards.<br><br><button class="btn primary" onclick="Cloud.signin()">SIGN IN</button></div>';return}
+ const B=BOARDS.find(b=>b[0]===curBoard),isLb=B[2]==='lb',col=isLb?'leaderboard':'users',f=B[0];
+ boardOff=onSnapshot(query(collection(db,col),orderBy(f,'desc'),limit(25)),s=>{
+  const rows=s.docs.map((d,i)=>{const u=d.data(),v=u[f]||0,mine=d.id===uid,c=/^#[0-9a-f]{6}$/i.test(u.color||'')?u.color:'var(--white)';
+   return '<div class="between '+(mine?'hl':'')+'" style="padding:11px 12px;border-bottom:1px solid var(--border)"><span style="display:flex;gap:14px;align-items:center;min-width:0"><b style="font:800 20px \'Barlow Condensed\';min-width:28px;color:'+(i<3?'var(--purple)':'var(--muted)')+'">'+(i+1)+'</b>'
+   +(isLb?'<span style="min-width:0"><b style="color:'+c+'">'+e(u.team||'Unnamed')+'</b><div class="sub">'+e(u.name)+' · Season '+(u.season||1)+' · '+(u.titles||0)+' title'+(u.titles===1?'':'s')+' · '+(u.wins||0)+'-'+(u.losses||0)+'</div></span>':'<b>'+e(u.name)+(mine?' <span class="pill">YOU</span>':'')+'</b>')
+   +'</span><b class="'+(f==='profit'&&v<0?'red':'green')+'" style="font:800 22px \'Barlow Condensed\'">'+B[3](v)+'</b></div>'}).join('');
+  body.innerHTML='<div class="section-head"><h2>'+B[1]+'</h2><span class="sub">TOP 25</span></div>'+(rows||'<div class="empty">No data yet. Play a few games and check back.</div>');
+  myRank(B,col)},x=>{body.innerHTML='<div class="empty">Could not load the leaderboard ('+e(x.code||'error')+').</div>'});
+}
+async function myRank(B,col){
+ const el=$('lbMe'),f=B[0];if(!el)return;
+ if(col==='leaderboard'&&!lastLb){el.innerHTML='<div class="section sub">Your franchise appears here after its first sync.</div>';return}
+ if(col==='users'&&!me){el.innerHTML='';return}
+ const mine=col==='leaderboard'?FR().stats()[f]:(me[f]||0);
+ try{const [a,t]=await Promise.all([getCountFromServer(query(collection(db,col),where(f,'>',mine))),getCountFromServer(query(collection(db,col),where(f,'>',-1e12)))]);
+  if(curBoard!==f)return;
+  el.innerHTML='<div class="section card between"><span class="sub">YOUR RANK</span><span><b class="purple" style="font:800 30px \'Barlow Condensed\'">#'+(a.data().count+1)+'</b> <span class="sub">of '+t.data().count+' · '+B[3](mine)+'</span></span></div>'}catch(x){el.innerHTML=''}
+}
+window.Cloud={
+ touch:()=>{if(!cloudReady||!uid)return;LS('franchiseOwner',uid);setBadge('saving');clearTimeout(timer);timer=setTimeout(()=>push(),2500)},
+ now:()=>run(async()=>{if(!uid)throw Error('Sign in first to save to the cloud');if(!cloudReady){await bootCloud();return}await push(true);T('Saved to your account')}),
+ pull:()=>run(async()=>{if(!uid)throw Error('Sign in first');const snap=await getDoc(sref(uid));if(!snap.exists())throw Error('No cloud save yet');
+  const c=snap.data(),cs=await unpack(c);if(!confirm('Replace the franchise on this device with your cloud save?\n'+(cs.team?.name||'')+' · Season '+(cs.season||1)+' · '+(cs.wins||0)+'-'+(cs.losses||0)))return;adopt(cs,c.at);cloudReady=true;setBadge('ok')}),
+ openBoards,closeBoards,board:k=>{curBoard=k;openBoards()},signin:()=>{offline=false;authView()}
+};
+
+onAuthStateChanged(auth,u=>{
+ subs.forEach(f=>f());subs=[];me=null;uid=u?u.uid:null;slip=[];cloudReady=false;clearTimeout(timer);clearTimeout(lbTimer);lastLb='';if(saveOff){saveOff();saveOff=null}
+ if(!u)return authView();
+ subs.push(onSnapshot(uref(uid),s=>{
+  if(!s.exists()){me=null;showGate(ghead('Pick a <span>name.</span>')+nameHTML());root.innerHTML=head()+'<div class="section card sub">Choose a player name to continue.</div>';return}
+  const first=!me;me=s.data();
+  if(first){offline=false;shell();showGate(ghead('Loading <span>franchise.</span>')+'<p class="sub">Syncing your save…</p>');bootCloud()}
+  $('olCoins').textContent=me.coins;$('olWho').textContent='Playing as '+me.name+((me.streak||0)>=2?' · 🔥 '+me.streak+' win streak':'');$('olRelief').disabled=me.coins>=10;stats();
+ }));
+});
+
+function shell(){
+ root.innerHTML=head()+`<div id="olBanner"></div><div class="section grid stats-grid">
+ <div class="card metric"><small>ONLINE COINS</small><strong class="green" id="olCoins">0</strong><p id="olWho"></p></div>
+ <div class="card"><label>STAKE (MIN 10)</label><input id="olStake" type="number" min="10" value="50" oninput="OL.slipDraw()"></div>
+ <div class="card"><div class="row"><button class="btn success" onclick="OL.daily()">DAILY +100</button><button class="btn" id="olRelief" onclick="OL.relief()">BROKE? +250</button><button class="btn" onclick="OL.out()">SIGN OUT</button></div><p class="sub" style="margin-top:10px">Daily every 22h. Broke relief under 10 coins, every 6h.</p></div></div>
+ <div class="section row" id="olTabs"><button class="btn sm primary" id="olTab1" onclick="OL.tab(1)">MATCHDAY</button><button class="btn sm" id="olTab2" onclick="OL.tab(2)">MY BETS</button><button class="btn sm" id="olTab3" onclick="OL.tab(3)">PLAYERS</button></div>
+ <div id="olP1"><div class="section card"><div class="section-head"><h2>Bet slip</h2><span class="pill" id="olSlipN"></span></div><div id="olSlip"></div></div>
+ <div class="section card"><div class="section-head"><h2 id="olMd">Matchday</h2><span class="pill" id="olClock"></span></div><div id="olGames"></div></div>
+ <div class="section card"><h2 style="margin-bottom:12px">Live activity</h2><div id="olFeed"></div></div></div>
+ <div id="olP2" style="display:none"><div class="section grid stats-grid" id="olStats"></div>
+ <div class="section card"><h2 style="margin-bottom:12px">Open bets</h2><div id="olOpen"></div></div>
+ <div class="section card"><h2 style="margin-bottom:12px">Bet history</h2><div id="olHist"></div></div>
+ <div class="section card"><h2 style="margin-bottom:12px">Last matchday results</h2><div id="olLast"></div></div></div>
+ <div id="olP3" style="display:none"><div class="section grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+ <div class="card"><div class="section-head"><h3 style="margin:0">Leaderboard</h3><div class="row"><button class="btn sm primary" id="olLb1" onclick="OL.lb('coins')">COINS</button><button class="btn sm" id="olLb2" onclick="OL.lb('profit')">PROFIT</button><button class="btn sm" id="olLb3" onclick="OL.lb('streak')">STREAK</button></div></div><div id="olTop"></div></div>
+ <div class="card"><h3>Send coins</h3><div class="form-grid"><div class="field"><label>PLAYER NAME</label><input id="olTo"></div><div class="field"><label>AMOUNT</label><input id="olAmt" type="number" min="1"></div></div>
+ <button class="btn primary" style="margin:12px 0" onclick="OL.send()">SEND</button><div id="olGifts"></div></div></div></div>`;
+ subs.push(onSnapshot(query(collection(db,'bets'),where('uid','==',uid)),s=>{bets=s.docs.map(d=>({id:d.id,...d.data()}));drawBets();redraw();settle()}));
+ subs.push(onSnapshot(query(collection(db,'feed'),orderBy('at','desc'),limit(12)),s=>{feed=s.docs.map(d=>d.data());drawFeed()},()=>{}));
+ subs.push(onSnapshot(query(collection(db,'gifts'),where('to','==',uid),where('claimed','==',false)),s=>{
+  $('olGifts').innerHTML=s.docs.map(d=>{const g=d.data();return`<div class="between" style="padding:8px 0;border-top:1px solid var(--border)"><span>${e(g.fromName)} sent <b class="green">${g.amount}</b></span><button class="btn sm" onclick="OL.take('${d.id}')">CLAIM</button></div>`}).join('')}));
+ subs.push(onSnapshot(doc(db,'config','announce'),q=>{const d=q.exists()?q.data():{};$('olBanner').innerHTML=d.on&&d.text?`<div class="section card" style="border-color:var(--purple)"><b>ANNOUNCEMENT</b> · ${e(d.text)}</div>`:''},()=>{}));
+ subs.push(onSnapshot(doc(db,'config','game'),q=>{gameCfg=q.exists()?q.data():{}},()=>{}));
+ subs.push(()=>{if(topOff)topOff()});subTop();
+ const id=setInterval(tick,1000);subs.push(()=>clearInterval(id));lastKey='';drawSlip();tick();
+}
+function subTop(){
+ if(topOff)topOff();const f=lbMode;
+ topOff=onSnapshot(query(collection(db,'users'),orderBy(f,'desc'),limit(10)),s=>{
+  $('olTop').innerHTML=s.docs.map((d,i)=>{const u=d.data(),v=u[f]||0;return`<div class="between" style="padding:6px 0"><span>${i+1}. ${e(u.name)}</span><b class="${f==='profit'?(v>=0?'green':'red'):''}">${f==='profit'&&v>0?'+':''}${v}${f==='streak'?' 🔥':''}</b></div>`}).join('')||'<p class="sub">No data yet.</p>'},()=>{});
+}
+function stats(){
+ if(!$('olStats')||!me)return;const w=me.wins||0,l=me.losses||0,pf=me.profit||0;
+ $('olStats').innerHTML=[['RECORD',w+'–'+l,'settled bets'],['WIN RATE',w+l?Math.round(w/(w+l)*100)+'%':'–','wins / settled'],['NET PROFIT',(pf>0?'+':'')+pf,'coins won or lost'],['WIN STREAK',String(me.streak||0),'best '+(me.best||0)+' · 3+ wins pays a +10% bonus']]
+ .map(([a,b,c])=>`<div class="card metric"><small>${a}</small><strong class="${a==='NET PROFIT'?(pf>=0?'green':'red'):''}">${b}</strong><p>${c}</p></div>`).join('');
+}
+function redraw(){if(!$('olGames'))return;const now=Date.now(),k=slotOf(now),t=now-k*L;drawGames(k,t,phaseOf(t))}
+function drawSlip(){
+ const el=$('olSlip');if(!el)return;$('olSlipN').textContent=slip.length+' / 6 LEGS';
+ if(!slip.length){el.innerHTML='<p class="sub">Tap any odds below to add it to your slip. Pick 2 or more games to build a parlay: the odds multiply, but every leg must win.</p>';return}
+ const stake=Math.floor(+$('olStake').value)||0,n=slip.length,po=slip.reduce((a,l)=>a*l.odds,1);
+ el.innerHTML=slip.map((l,i)=>`<div class="between" style="padding:8px 0;border-bottom:1px solid var(--border)"><span><b>${e(l.label)}</b><div class="sub">${e(l.game)} · ${l.odds}x</div></span><button class="btn sm" onclick="OL.rm(${i})">✕</button></div>`).join('')
+ +`<div class="between" style="margin-top:12px"><span class="sub">${n>1?'Parlay odds':'Odds'}</span><b class="green">${po.toFixed(2)}x</b></div>
+ <div class="between"><span class="sub">To win with a ${stake} stake</span><b class="green">${Math.round(stake*po)}</b></div>
+ <div class="row" style="margin-top:12px">${n>1?`<button class="btn primary" onclick="OL.place('parlay')">PLACE PARLAY</button><button class="btn" onclick="OL.place('singles')">${n} SINGLES (${stake*n} TOTAL)</button>`:'<button class="btn primary" onclick="OL.place(\'singles\')">PLACE BET</button>'}<button class="btn" onclick="OL.clr()">CLEAR</button></div>`;
+}
+function tick(){
+ if(!$('olGames'))return;const now=Date.now(),k=slotOf(now),t=now-k*L,ph=phaseOf(t);
+ if(slip.length&&slipSlot!==k){slip=[];drawSlip();T('New matchday: your slip was cleared')}
+ $('olMd').textContent='Matchday '+(k%10000);
+ $('olClock').textContent=ph==='open'?'BETTING OPEN · TIP-OFF IN '+mmss(OPEN-t):ph==='live'?'LIVE · FINAL IN '+mmss(OPEN+LIVE-t):'FINAL · NEXT MATCHDAY IN '+mmss(L-t);
+ const key=k+ph;if(key!==lastKey){lastKey=key;drawGames(k,t,ph);drawLast(k);drawBets()}
+ if(ph==='live')drawGames(k,t,ph);
+ drawFeed();settle();
+}
+function drawFeed(){const el=$('olFeed');if(!el)return;el.innerHTML=feed.map(f=>`<div class="between" style="padding:6px 0;border-bottom:1px solid var(--border)"><span><b>${e(f.name)}</b> ${e(f.text)}</span><span class="sub">${ago(f.at)}</span></div>`).join('')||'<p class="sub">No activity yet. Be the first to place a bet.</p>'}
+function drawGames(k,t,ph){
+ const on=ph==='open',gs=games(k),hot=gs.reduce((m,g,i)=>Math.abs(g.sp)<Math.abs(gs[m].sp)?i:m,0),mine=new Set(bets.filter(b=>b.slot===k).flatMap(b=>legsOf(b).map(l=>l.gi)));
+ const bt=(x,gi,kind,side)=>{const s=slip.some(l=>l.gi===gi&&l.kind===kind&&l.side===side);return`<button class="btn sm ${s?'primary':''}" ${on?'':'disabled'} onclick="OL.pick(${gi},'${kind}','${side}')">${e(x)}</button>`};
+ $('olGames').innerHTML=tbl(['MATCHUP','MONEYLINE','SPREAD (1.91x)','TOTAL (1.91x)'],gs.map((g,i)=>{
+  let sA='–',sH='–',sub='Tip-off when betting closes';
+  if(ph==='final'){sA=g.A;sH=g.H;sub='FINAL'+((g.H>g.A?g.ml[0]:g.ml[1])>=2.5?' · <span class="red">UPSET</span>':'')}
+  else if(ph==='live'){const ls=liveScore(g,t-OPEN),rem=720*(1-ls.f);sA=ls.A;sH=ls.H;
+   sub='<span class="green">LIVE</span> Q'+ls.q+' '+Math.floor(rem/60)+':'+String(Math.floor(rem%60)).padStart(2,'0')+(ls.done?' · '+g.qA.slice(0,ls.done).map((a,j)=>'Q'+(j+1)+' '+a+'-'+g.qH[j]).join(' · '):'')}
+  return`<tr><td>${i===hot?'<span class="purple">★ HOT</span> ':''}${mine.has(i)?'<span class="green">●</span> ':''}<b>${e(sn(g.w))} ${sA}</b> @ <b>${e(sn(g.h))} ${sH}</b><div class="sub">${sub}</div></td>
+  <td><div class="row">${bt(sn(g.w)+' '+g.ml[1]+'x',i,'ml','A')}${bt(sn(g.h)+' '+g.ml[0]+'x',i,'ml','H')}</div></td>
+  <td><div class="row">${bt(sn(g.w)+' '+sg(-g.sp),i,'sp','A')}${bt(sn(g.h)+' '+sg(g.sp),i,'sp','H')}</div></td>
+  <td><div class="row">${bt('O '+g.tot,i,'tot','O')}${bt('U '+g.tot,i,'tot','U')}</div></td></tr>`}).join(''));
+}
+function drawLast(k){
+ $('olLast').innerHTML=tbl(['MATCHUP','FINAL','QUARTERS'],games(k-1).map(g=>`<tr><td>${e(g.w)} @ ${e(g.h)}</td><td><b>${g.A} – ${g.H}</b></td><td class="sub">${g.qA.map((a,j)=>a+'-'+g.qH[j]).join(' · ')}</td></tr>`).join(''));
+}
+function drawBets(){
+ if(!$('olOpen'))return;
+ const mt=b=>legsOf(b).map(l=>{const g=games(b.slot)[l.gi];return e(sn(g.w))+' @ '+e(sn(g.h))}).join(', '),op=bets.filter(b=>b.status==='open').sort((a,b)=>b.created-a.created),hi=bets.filter(b=>b.status!=='open').sort((a,b)=>b.created-a.created).slice(0,15);
+ $('olOpen').innerHTML=op.length?tbl(['BET','STAKE','ODDS','TO WIN'],op.map(b=>`<tr><td>${e(b.label)}<div class="sub">${mt(b)}</div></td><td>${b.stake}</td><td>${b.odds}x</td><td>${Math.round(b.stake*legsOf(b).reduce((a,l)=>a*l.odds,1))}</td></tr>`).join('')):'<div class="empty sub">No open bets.</div>';
+ $('olHist').innerHTML=hi.length?tbl(['BET','STAKE','RESULT'],hi.map(b=>{const pay=b.pay!=null?b.pay:b.status==='won'?gradeBet(b).pay:b.status==='push'||b.status==='void'?b.stake:0;
+  return`<tr><td>${e(b.label)}<div class="sub">${mt(b)}</div></td><td>${b.stake}</td><td class="${b.status==='won'?'green':b.status==='lost'?'red':''}">${b.status==='won'?'WON +'+(pay-b.stake):b.status==='push'?'PUSH':b.status==='void'?'VOID (refunded)':'LOST -'+b.stake}</td></tr>`}).join('')):'<div class="empty sub">No settled bets yet.</div>';
+}
+function settle(){
+ const now=Date.now();
+ bets.filter(b=>b.status==='open'&&now>=b.slot*L+OPEN+LIVE&&!busy.has(b.id)).forEach(b=>{
+  busy.add(b.id);const g=gradeBet(b);let res={pay:g.pay,bonus:0};
+  runTransaction(db,async t=>{
+   const br=doc(db,'bets',b.id),c=(await t.get(br)).data();if(!c||c.status!=='open')throw 0;const s=(await t.get(uref(uid))).data();
+   let pay=g.pay,upd={};
+   if(g.st==='won'){const ns=(s.streak||0)+1,bonus=ns>=3?Math.round((pay-b.stake)*.1):0;pay+=bonus;res={pay,bonus};
+    upd={wins:(s.wins||0)+1,streak:ns,best:Math.max(s.best||0,ns),profit:(s.profit||0)+pay-b.stake};
+    if(pay-b.stake>=100||legsOf(b).length>1)t.set(doc(collection(db,'feed')),{name:s.name,at:Date.now(),text:'won '+(pay-b.stake)+' coins on '+b.label});
+   }else if(g.st==='lost')upd={losses:(s.losses||0)+1,streak:0,profit:(s.profit||0)-b.stake};
+   t.update(br,{status:g.st,pay});t.update(uref(uid),{coins:s.coins+pay,...upd});
+  }).then(()=>T(g.st==='won'?'Bet won! +'+(res.pay-b.stake)+' coins'+(res.bonus?' (includes a '+res.bonus+' streak bonus)':''):g.st==='push'?'Bet pushed, stake returned':'Bet lost: '+b.label)).catch(()=>{}).finally(()=>busy.delete(b.id))})
+}
+
+window.OL={
+ google:()=>run(()=>signInWithPopup(auth,new GoogleAuthProvider())),
+ guest:()=>run(()=>signInAnonymously(auth)),
+ out:()=>run(async()=>{
+  if(cloudReady&&dirty())await push(true);
+  if(cloudReady&&dirty()&&!confirm('Your latest progress could not be saved to the cloud. Sign out anyway and lose it?'))return;
+  if(LS('franchiseOwner')===uid)['franchiseSave','franchiseAt','franchiseOwner','franchiseSynced','franchiseBase'].forEach(k=>LS(k,null));
+  await signOut(auth);location.reload()}),
+ offline:()=>{offline=true;authView()},
+ login:()=>run(()=>signInWithEmailAndPassword(auth,$('olEmail').value.trim(),$('olPass').value)),
+ signup:()=>run(()=>createUserWithEmailAndPassword(auth,$('olEmail').value.trim(),$('olPass').value)),
+ reset:()=>run(async()=>{const m=$('olEmail').value.trim();if(!m)throw Error('Type your email above first');await sendPasswordResetEmail(auth,m);T('Password reset email sent')}),
+ tab:n=>{for(let i=1;i<=3;i++){const p=$('olP'+i),b=$('olTab'+i);if(p)p.style.display=i===n?'':'none';if(b)b.classList.toggle('primary',i===n)}},
+ lb:m=>{lbMode=m;['coins','profit','streak'].forEach((x,i)=>$('olLb'+(i+1)).classList.toggle('primary',x===m));subTop()},
+ slipDraw:()=>drawSlip(),
+ rm:i=>{slip.splice(i,1);drawSlip();redraw()},
+ clr:()=>{slip=[];drawSlip();redraw()},
+ pick:(gi,kind,side)=>{
+  const now=Date.now(),k=slotOf(now);if(now-k*L>=OPEN)return T('Betting is closed for this matchday');
+  if(me&&me.banned)return T('Your account is banned');if(gameCfg.betting===false)return T('Betting is paused by the admin');
+  if(slipSlot!==k){slip=[];slipSlot=k}
+  const i=slip.findIndex(l=>l.gi===gi&&l.kind===kind&&l.side===side);
+  if(i>=0)slip.splice(i,1);
+  else{slip=slip.filter(l=>l.gi!==gi);if(slip.length>=6)return T('Max 6 legs per slip');
+   const g=games(k)[gi],line=kind==='sp'?g.sp:kind==='tot'?g.tot:0,odds=kind==='ml'?g.ml[side==='H'?0:1]:1.91,
+   label=kind==='ml'?sn(side==='H'?g.h:g.w)+' ML':kind==='sp'?sn(side==='H'?g.h:g.w)+' '+sg(side==='H'?g.sp:-g.sp):(side==='O'?'Over ':'Under ')+g.tot;
+   slip.push({gi,kind,side,line,odds,label,game:sn(g.w)+' @ '+sn(g.h)})}
+  drawSlip();redraw()},
+ place:mode=>run(async()=>{
+  if(me&&me.banned)throw Error('Your account is banned');if(gameCfg.betting===false)throw Error('Betting is paused by the admin');
+  const now=Date.now(),k=slotOf(now);if(now-k*L>=OPEN)throw Error('Betting is closed for this matchday');
+  if(!slip.length)throw Error('Your slip is empty');if(slipSlot!==k)throw Error('A new matchday started. Rebuild your slip.');
+  const stake=Math.floor(+$('olStake').value);if(!(stake>=10))throw Error('Minimum stake is 10 coins');
+  const rows=mode==='parlay'?[{legs:slip.map(({gi,kind,side,line,odds})=>({gi,kind,side,line,odds})),odds:Math.round(slip.reduce((a,l)=>a*l.odds,1)*100)/100,label:'Parlay ('+slip.length+'): '+slip.map(l=>l.label).join(' + ')}]
+   :slip.map(l=>({legs:[{gi:l.gi,kind:l.kind,side:l.side,line:l.line,odds:l.odds}],odds:l.odds,label:l.label})),cost=stake*rows.length;
+  await runTransaction(db,async t=>{const s=(await t.get(uref(uid))).data();if(s.coins<cost)throw Error('Not enough coins');
+   t.update(uref(uid),{coins:s.coins-cost});
+   rows.forEach(d=>{t.set(doc(collection(db,'bets')),{uid,name:s.name,slot:k,stake,status:'open',created:now,...d});
+    t.set(doc(collection(db,'feed')),{name:s.name,at:now,text:'bet '+stake+' on '+d.label+' @ '+d.odds+'x'})})});
+  slip=[];drawSlip();redraw();T(rows.length>1?rows.length+' bets placed':'Bet placed')}),
+ name:()=>run(async()=>{
+  const n=$('olName').value.trim();if(!/^[a-z0-9_]{3,16}$/i.test(n))throw Error('Use 3-16 letters, numbers or _');
+  await runTransaction(db,async t=>{const nr=doc(db,'names',n.toLowerCase());if((await t.get(nr)).exists())throw Error('That name is taken');
+   t.set(nr,{uid});t.set(uref(uid),{name:n,coins:500,lastDaily:0,lastRelief:0})})}),
+ daily:()=>run(async()=>{await runTransaction(db,async t=>{const s=(await t.get(uref(uid))).data();
+  if(Date.now()-s.lastDaily<22*H)throw Error('Daily coins not ready yet');t.update(uref(uid),{coins:s.coins+100,lastDaily:Date.now()})});T('+100 coins')}),
+ relief:()=>run(async()=>{await runTransaction(db,async t=>{const s=(await t.get(uref(uid))).data();
+  if(s.coins>=10)throw Error('Relief is only for players under 10 coins');if(Date.now()-s.lastRelief<6*H)throw Error('Relief available every 6 hours');
+  t.update(uref(uid),{coins:s.coins+250,lastRelief:Date.now()})});T('+250 coins')}),
+ send:()=>run(async()=>{
+  if(me&&me.banned)throw Error('Your account is banned');
+  const to=$('olTo').value.trim().toLowerCase(),a=Math.floor(+$('olAmt').value);if(!(a>0))throw Error('Enter an amount');
+  await runTransaction(db,async t=>{const n=await t.get(doc(db,'names',to));if(!n.exists())throw Error('No player with that name');
+   if(n.data().uid===uid)throw Error("You can't send coins to yourself");const s=(await t.get(uref(uid))).data();if(s.coins<a)throw Error('Not enough coins');
+   t.update(uref(uid),{coins:s.coins-a});t.set(doc(collection(db,'gifts')),{from:uid,fromName:s.name,to:n.data().uid,amount:a,claimed:false})});
+  T('Sent '+a+' coins');$('olAmt').value=''}),
+ take:id=>run(async()=>{await runTransaction(db,async t=>{const gr=doc(db,'gifts',id),g=await t.get(gr);if(!g.exists()||g.data().claimed)return;
+  const s=(await t.get(uref(uid))).data();t.update(gr,{claimed:true});t.update(uref(uid),{coins:s.coins+g.data().amount})})})
+};
+}
+
+</script>
+</body>
+</html>
